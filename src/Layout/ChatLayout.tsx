@@ -30,7 +30,7 @@ export const ChatLayout = () => {
 
   return (
     <SidebarProvider open={open} onOpenChange={setOpen}>
-      <Sidebar collapsible="offcanvas" className="max-w-md">
+      <Sidebar collapsible="offcanvas" className="max-w-md pt-16">
         <SidebarHeader className="bg-card border-b dark:border-slate-800duration-75 transition md:hidden">
           <h2 className="text-lg font-semibold text-center">Chat Menu</h2>
         </SidebarHeader>
