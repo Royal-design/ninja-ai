@@ -43,8 +43,8 @@ export const Message: React.FC<MessageProps> = ({
   );
   const translatedLanguage = translatedLanguageData?.name;
   const translatedFlag = translatedLanguageData?.flag;
-  const language = languageData?.name || "Unknown";
-  const flag = languageData?.flag || "";
+  const language = languageData?.name || lang;
+  const flag = languageData?.flag || `https://flagcdn.com/w40/${lang}.png`;
   const chatDate = formatDate(date);
 
   return (

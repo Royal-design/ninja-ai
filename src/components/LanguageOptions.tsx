@@ -25,14 +25,14 @@ export const LanguageOptions = () => {
         <img
           src={
             languages.find((lang) => lang.code === detectedLang)?.flag ||
-            "https://flagcdn.com/w40/gb.png"
+            `https://flagcdn.com/w40/${detectedLang}.png`
           }
           alt="Detected Flag"
           className="w-6 h-6 rounded-full "
         />
         <span className="text-sm font-semibold">
           {languages.find((lang) => lang.code === detectedLang)?.name ||
-            "Unknown"}
+            detectedLang}
         </span>
       </div>
 
