@@ -11,6 +11,7 @@ import { languages } from "@/assets/data/Languages";
 import { formatDate } from "@/features/formatDate";
 import logo from "../assets/image/ninjalogo.png";
 import { CiUser } from "react-icons/ci";
+import { getCountryName } from "@/features/getCountryName";
 
 interface MessageProps {
   id: number;
@@ -43,7 +44,7 @@ export const Message: React.FC<MessageProps> = ({
   );
   const translatedLanguage = translatedLanguageData?.name;
   const translatedFlag = translatedLanguageData?.flag;
-  const language = languageData?.name || lang;
+  const language = languageData?.name || getCountryName(lang);
   const flag = languageData?.flag || `https://flagcdn.com/w40/${lang}.png`;
   const chatDate = formatDate(date);
 

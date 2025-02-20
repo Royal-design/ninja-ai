@@ -9,6 +9,7 @@ import {
 import { setSelectedLang } from "@/redux/slice/chatSlice";
 import { HiOutlineLanguage } from "react-icons/hi2";
 import { languages } from "@/assets/data/Languages";
+import { getCountryName } from "@/features/getCountryName";
 
 export const LanguageOptions = () => {
   const dispatch = useAppDispatch();
@@ -32,7 +33,7 @@ export const LanguageOptions = () => {
         />
         <span className="text-sm font-semibold">
           {languages.find((lang) => lang.code === detectedLang)?.name ||
-            detectedLang}
+            getCountryName(detectedLang)}
         </span>
       </div>
 
