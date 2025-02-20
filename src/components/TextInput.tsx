@@ -54,7 +54,7 @@ export const TextInput = ({ scrollToBottom }: TextInputProps) => {
   };
 
   return (
-    <div className="pb-4">
+    <div className="">
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
