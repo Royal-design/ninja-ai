@@ -22,7 +22,11 @@ const inputSchema = chatSchema.pick({
 });
 type InputSchema = z.infer<typeof inputSchema>;
 
-export const TextInput = () => {
+type TextInputProps = {
+  scrollToBottom: () => void;
+};
+
+export const TextInput = ({ scrollToBottom }: TextInputProps) => {
   const dispatch = useAppDispatch();
   const [loading] = useState(false);
 
@@ -32,10 +36,8 @@ export const TextInput = () => {
   });
 
   const onSubmit = async (data: InputSchema) => {
-    console.log("Text Submitted:", data.text);
     try {
       const { detectedLanguage } = await detectLanguage(data.text);
-      console.log("Detected Language:", detectedLanguage);
 
       dispatch(
         addMessage({
@@ -44,6 +46,7 @@ export const TextInput = () => {
         })
       );
       form.reset();
+      scrollToBottom();
     } catch (err) {
       console.error("Language Detection Failed:", err);
       dispatch(setError("Failed to detect language."));

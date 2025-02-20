@@ -12,6 +12,7 @@ import { TextInput } from "./TextInput";
 import { Message } from "./Message";
 import { toast } from "sonner";
 import { Navbar } from "./Navbar";
+import { useEffect, useRef } from "react";
 
 export const ChatInterface = () => {
   const dispatch = useAppDispatch();
@@ -21,9 +22,16 @@ export const ChatInterface = () => {
 
   const activeChat = chats.find((chat) => chat.id === activeChatId);
   const messages = activeChat ? activeChat.messages : [];
-  console.log(chats);
 
-  console.log("Messages from Redux:", messages);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
   const handleTranslate = async (id: number, text: string, lang: string) => {
     if (!activeChatId) return;
@@ -72,25 +80,28 @@ export const ChatInterface = () => {
   };
 
   return (
-    <div className=" bg-background flex flex-col max-h-screen p-4">
+    <div className="bg-background flex flex-col max-h-screen p-4">
       <Navbar />
-      <div className="gap-2 mt-8 overflow-auto scrollbar-hidden  h-screen  w-full max-sm:px-2 px-[4rem]">
+      <div className="gap-2 mt-8 overflow-auto scrollbar-hidden h-screen w-full max-sm:px-2 px-[4rem]">
         {messages.length > 0 ? (
-          messages.map((msg) => (
-            <Message
-              key={msg.id}
-              id={msg.id}
-              text={msg.text}
-              type={msg.type}
-              lang={msg.lang}
-              translatedLang={msg.translatedLang ?? ""}
-              onTranslate={handleTranslate}
-              onSummarize={handleSummarize}
-              isSummarizing={msg.isSummarizing ?? false}
-              isTranslating={msg.isTranslating ?? false}
-              date={msg.timestamp}
-            />
-          ))
+          <>
+            {messages.map((msg) => (
+              <Message
+                key={msg.id}
+                id={msg.id}
+                text={msg.text}
+                type={msg.type}
+                lang={msg.lang}
+                translatedLang={msg.translatedLang ?? ""}
+                onTranslate={handleTranslate}
+                onSummarize={handleSummarize}
+                isSummarizing={msg.isSummarizing ?? false}
+                isTranslating={msg.isTranslating ?? false}
+                date={msg.timestamp}
+              />
+            ))}
+            <div ref={messagesEndRef} />
+          </>
         ) : (
           <p className="text-center text-muted-foreground mt-10">
             What is on your mind?
@@ -98,7 +109,7 @@ export const ChatInterface = () => {
         )}
       </div>
 
-      <TextInput />
+      <TextInput scrollToBottom={scrollToBottom} />
     </div>
   );
 };
