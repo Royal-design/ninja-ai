@@ -9,6 +9,7 @@ interface Message {
   isTranslating?: boolean;
   isSummarizing?: boolean;
   translatedLang?: string;
+  isLoading?: boolean;
 }
 
 interface Chat {

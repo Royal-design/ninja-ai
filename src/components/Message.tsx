@@ -9,9 +9,8 @@ import {
 import { RiVoiceprintLine } from "react-icons/ri";
 import { Button } from "./ui/button";
 import { languages } from "@/assets/data/Languages";
-import { HiOutlineLanguage } from "react-icons/hi2";
 import { formatDate } from "@/features/formatDate";
-import { GrLanguage } from "react-icons/gr";
+import logo from "../assets/image/ninjalogo.png";
 
 interface MessageProps {
   id: number;
@@ -69,7 +68,7 @@ export const Message: React.FC<MessageProps> = ({
             <div className="flex flex-col gap-4 ">
               <div className="flex gap-4 items-center">
                 <div className="">
-                  <HiOutlineLanguage className="size-4" />
+                  <img src={logo} alt="logo" className="size-5" />
                 </div>
                 <p className="leading-[150%]">{text}</p>
               </div>
@@ -90,7 +89,7 @@ export const Message: React.FC<MessageProps> = ({
           ) : (
             <div className="flex gap-4 items-center">
               <div className="">
-                <GrLanguage className="size-4" />
+                <img src={logo} alt="logo" className="size-5" />
               </div>
               <p className="leading-[150%]">{text}</p>
             </div>
