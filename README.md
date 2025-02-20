@@ -19,3 +19,5 @@ Ninja.Translator is an AI-powered text processing interface that allows users to
 - **State Management**: Redux Toolkit
 - **API**: Chrome AI APIs (for translation and summarization)
 - **Storage**: LocalStorage (for chat history persistence)
+
+[click the link to access the site](https://ninja-ai-gpt.vercel.app/)

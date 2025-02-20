@@ -25,7 +25,7 @@ export const ChatInterface = () => {
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  const scrollToBottom = (): void => {
+  const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
@@ -80,15 +80,9 @@ export const ChatInterface = () => {
   };
 
   return (
-    <div className="bg-background max-h-screen h-screen max-sm:gap-0 flex items-center gap-12 max-sm:justify-between  flex-col  p-8">
-      <div className="w-full md:flex-auto lg:flex-none">
-        <Navbar />
-      </div>
-      <div
-        className={` ${
-          messages.length > 0 && "h-screen"
-        } mt-8 overflow-auto flex flex-col gap-8 scrollbar-hidden  w-full max-sm:px-2 px-[2rem]`}
-      >
+    <div className="bg-background flex flex-col max-h-screen p-8">
+      <Navbar />
+      <div className=" mt-8 overflow-auto flex flex-col gap-8 scrollbar-hidden h-screen w-full max-sm:px-2 px-[2rem]">
         {messages.length > 0 ? (
           <>
             {messages.map((msg) => (
@@ -109,14 +103,13 @@ export const ChatInterface = () => {
             <div ref={messagesEndRef} />
           </>
         ) : (
-          <p className="text-center text-4xl mb-4 max-sm:text-2xl md:text-2xl text-muted-foreground mt-10">
+          <p className="text-center text-4xl md:text-2xl max-sm:text-2xl  text-muted-foreground mt-10">
             What can I help you with?
           </p>
         )}
       </div>
-      <div className=" w-full">
-        <TextInput scrollToBottom={scrollToBottom} />
-      </div>
+
+      <TextInput scrollToBottom={scrollToBottom} />
     </div>
   );
 };
