@@ -25,7 +25,7 @@ export const ChatInterface = () => {
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  const scrollToBottom = () => {
+  const scrollToBottom = (): void => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
@@ -54,7 +54,7 @@ export const ChatInterface = () => {
             translatedLang: selectedLang
           })
         );
-      }, 1000);
+      }, 200);
     } catch (err) {
       dispatch(setError("Translation failed."));
     } finally {
@@ -71,7 +71,7 @@ export const ChatInterface = () => {
       const summary = await summarizeText(text);
       setTimeout(() => {
         dispatch(setSummary({ id, text: summary }));
-      }, 1000);
+      }, 200);
     } catch (err) {
       dispatch(setError("Summarization failed."));
     } finally {
@@ -80,9 +80,15 @@ export const ChatInterface = () => {
   };
 
   return (
-    <div className="bg-background flex flex-col max-h-screen p-4">
-      <Navbar />
-      <div className="gap-2 mt-8 overflow-auto scrollbar-hidden h-screen w-full max-sm:px-2 px-[4rem]">
+    <div className="bg-background max-h-screen h-screen max-sm:gap-0 flex items-center gap-12 max-sm:justify-between  flex-col  p-8">
+      <div className="w-full md:flex-auto lg:flex-none">
+        <Navbar />
+      </div>
+      <div
+        className={` ${
+          messages.length > 0 && "h-screen"
+        } mt-8 overflow-auto flex flex-col gap-8 scrollbar-hidden  w-full max-sm:px-2 px-[2rem]`}
+      >
         {messages.length > 0 ? (
           <>
             {messages.map((msg) => (
@@ -103,13 +109,14 @@ export const ChatInterface = () => {
             <div ref={messagesEndRef} />
           </>
         ) : (
-          <p className="text-center text-muted-foreground mt-10">
-            What is on your mind?
+          <p className="text-center text-4xl mb-4 max-sm:text-2xl md:text-2xl text-muted-foreground mt-10">
+            What can I help you with?
           </p>
         )}
       </div>
-
-      <TextInput scrollToBottom={scrollToBottom} />
+      <div className=" w-full">
+        <TextInput scrollToBottom={scrollToBottom} />
+      </div>
     </div>
   );
 };

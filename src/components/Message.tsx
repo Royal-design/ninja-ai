@@ -11,6 +11,7 @@ import { Button } from "./ui/button";
 import { languages } from "@/assets/data/Languages";
 import { formatDate } from "@/features/formatDate";
 import logo from "../assets/image/ninjalogo.png";
+import { CiUser } from "react-icons/ci";
 
 interface MessageProps {
   id: number;
@@ -46,75 +47,71 @@ export const Message: React.FC<MessageProps> = ({
   const language = languageData?.name || "Unknown";
   const flag = languageData?.flag || "";
   const chatDate = formatDate(date);
+
   return (
-    <Card
-      className={`p-3 max-w-md flex bg-card flex-col gap-4 shadow-none max-sm:w-full w-sm border rounded-2xl mb-2 ${
-        type === "user" ? "ml-auto" : "mr-auto"
+    <div
+      className={`flex max-sm:w-full   items-start gap-2 mb-2 ${
+        type === "user" ? "ml-auto flex-row-reverse" : "mr-auto"
       }`}
     >
-      <CardHeader className="p-0">
-        <CardTitle />
-      </CardHeader>
-      <CardContent className="p-0">
-        <div className={type === "user" ? "font-semibold" : "text-primary"}>
-          {type === "user" ? (
-            <div className="flex gap-4 items-center">
-              <div className="">
-                <RiVoiceprintLine />
-              </div>
-              <p className="leading-[150%]">{text}</p>
-            </div>
-          ) : type === "translation" ? (
-            <div className="flex flex-col gap-4 ">
+      <figure className="rounded-full bg-card w-8 h-8 p-2 flex items-center justify-center">
+        {type === "user" ? (
+          <CiUser size={22} />
+        ) : (
+          <img src={logo} alt="logo" className="size-5 object-cover" />
+        )}
+      </figure>
+
+      <Card className="p-3 bg-card max-w-md w-sm  border shadow-none rounded-2xl">
+        <CardHeader className="p-0">
+          <CardTitle />
+        </CardHeader>
+
+        <CardContent className="p-0">
+          <div className={type === "user" ? "font-semibold" : "text-primary"}>
+            {type === "user" ? (
               <div className="flex gap-4 items-center">
-                <div className="">
-                  <img src={logo} alt="logo" className="size-5" />
-                </div>
+                <RiVoiceprintLine />
                 <p className="leading-[150%]">{text}</p>
               </div>
-
-              <div className="flex flex-col gap-2">
-                <div className="flex gap-4 mt-4 items-center">
-                  {flag && (
-                    <img
-                      src={translatedFlag}
-                      alt={translatedLang}
-                      className="size-4 rounded-full"
-                    />
-                  )}
-                  <p className="text-xs">{translatedLanguage}</p>
+            ) : (
+              <div className="flex flex-col gap-4">
+                <div className="flex gap-4 items-center">
+                  <p className="leading-[150%]">{text}</p>
                 </div>
-              </div>
-            </div>
-          ) : (
-            <div className="flex gap-4 items-center">
-              <div className="">
-                <img src={logo} alt="logo" className="size-5" />
-              </div>
-              <p className="leading-[150%]">{text}</p>
-            </div>
-          )}
-        </div>
 
-        {type === "user" && (
-          <div className="flex flex-col gap-2">
-            <div className="flex gap-4 mt-4 items-center">
+                {type === "translation" && (
+                  <div className="flex gap-4 mt-2 items-center">
+                    {translatedFlag && (
+                      <img
+                        src={translatedFlag}
+                        alt={translatedLang}
+                        className="size-4 rounded-full"
+                      />
+                    )}
+                    <p className="text-xs">{translatedLanguage}</p>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+
+          {type === "user" && (
+            <div className="flex gap-4 mt-2 items-center">
               {flag && (
                 <img src={flag} alt={lang} className="size-4 rounded-full" />
               )}
               <p className="text-xs">{language}</p>
             </div>
-          </div>
-        )}
-      </CardContent>
+          )}
+        </CardContent>
 
-      <CardFooter className="p-0 flex gap-2  items-end justify-between">
-        <div className="">
-          {type === "user" && (
+        {type === "user" && (
+          <CardFooter className="p-0 flex gap-2 mt-4 items-end justify-between">
             <div className="flex items-center mt-2">
               <Button
                 onClick={() => onTranslate(id, text, lang)}
-                className="ml-2 text-sm text-primary bg-button transition-colors hover:bg-button-hover duration-200"
+                className="ml-2 text-sm text-primary bg-button hover:bg-button-hover transition-colors duration-200"
                 disabled={isTranslating}
               >
                 {isTranslating ? "Translating..." : "Translate"}
@@ -123,18 +120,18 @@ export const Message: React.FC<MessageProps> = ({
               {text.length > 150 && lang === "en" && (
                 <Button
                   onClick={() => onSummarize(id, text)}
-                  className="ml-2 text-sm bg-button hover:bg-button-hover duration-200 text-primary"
+                  className="ml-2 text-sm bg-button hover:bg-button-hover transition-colors duration-200 text-primary"
                   disabled={isSummarizing}
                 >
                   {isSummarizing ? "Summarizing..." : "Summarize"}
                 </Button>
               )}
             </div>
-          )}
-        </div>
 
-        <p className="text-[10px] text-primary">{chatDate}</p>
-      </CardFooter>
-    </Card>
+            <p className="text-[10px] text-primary">{chatDate}</p>
+          </CardFooter>
+        )}
+      </Card>
+    </div>
   );
 };
