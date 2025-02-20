@@ -6,7 +6,6 @@ import {
   CardHeader,
   CardTitle
 } from "@/components/ui/card";
-import { RiVoiceprintLine } from "react-icons/ri";
 import { Button } from "./ui/button";
 import { languages } from "@/assets/data/Languages";
 import { formatDate } from "@/features/formatDate";
@@ -71,7 +70,6 @@ export const Message: React.FC<MessageProps> = ({
           <div className={type === "user" ? "font-semibold" : "text-primary"}>
             {type === "user" ? (
               <div className="flex gap-4 items-center">
-                <RiVoiceprintLine />
                 <p className="leading-[150%]">{text}</p>
               </div>
             ) : (

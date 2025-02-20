@@ -103,7 +103,7 @@ export const ChatInterface = () => {
             <div ref={messagesEndRef} />
           </>
         ) : (
-          <p className="text-center text-4xl md:text-2xl max-sm:text-2xl  text-muted-foreground mt-10">
+          <p className="text-center lg:text-4xl md:text-2xl max-sm:text-2xl  text-muted-foreground mt-10">
             What can I help you with?
           </p>
         )}
