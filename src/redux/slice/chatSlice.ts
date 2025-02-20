@@ -8,6 +8,7 @@ interface Message {
   timestamp: string;
   isTranslating?: boolean;
   isSummarizing?: boolean;
+  translatedLang?: string;
 }
 
 interface Chat {
@@ -108,7 +109,11 @@ export const chatSlice = createSlice({
 
     setTranslatedText: (
       state,
-      action: PayloadAction<{ id: number; text: string }>
+      action: PayloadAction<{
+        id: number;
+        text: string;
+        translatedLang: string;
+      }>
     ) => {
       if (!state.activeChatId) return;
 
@@ -119,6 +124,7 @@ export const chatSlice = createSlice({
         id: chat.messages.length + 1,
         text: action.payload.text,
         lang: state.selectedLang,
+        translatedLang: action.payload.translatedLang,
         type: "translation",
         timestamp: new Date().toISOString()
       });

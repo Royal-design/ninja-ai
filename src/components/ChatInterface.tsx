@@ -38,7 +38,15 @@ export const ChatInterface = () => {
 
     try {
       const translatedText = await translateText(text, lang, selectedLang);
-      dispatch(setTranslatedText({ id, text: translatedText }));
+      setTimeout(() => {
+        dispatch(
+          setTranslatedText({
+            id,
+            text: translatedText,
+            translatedLang: selectedLang
+          })
+        );
+      }, 1000);
     } catch (err) {
       dispatch(setError("Translation failed."));
     } finally {
@@ -53,7 +61,9 @@ export const ChatInterface = () => {
 
     try {
       const summary = await summarizeText(text);
-      dispatch(setSummary({ id, text: summary }));
+      setTimeout(() => {
+        dispatch(setSummary({ id, text: summary }));
+      }, 1000);
     } catch (err) {
       dispatch(setError("Summarization failed."));
     } finally {
@@ -73,6 +83,7 @@ export const ChatInterface = () => {
               text={msg.text}
               type={msg.type}
               lang={msg.lang}
+              translatedLang={msg.translatedLang ?? ""}
               onTranslate={handleTranslate}
               onSummarize={handleSummarize}
               isSummarizing={msg.isSummarizing ?? false}

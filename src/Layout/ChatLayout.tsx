@@ -86,7 +86,7 @@ export const ChatLayout = () => {
       </Sidebar>
       <SidebarTrigger className="text-primary fixed top-3 left-0 z-10 mr-5 hover:bg-card" />
       <main className="w-full relative h-screen overflow-hidden bg-background p-4  max-sm:px-0">
-        <div className="bg-red-200 overflow-hidden">
+        <div className="bg-background overflow-hidden">
           {activeChatId ? (
             <ChatInterface />
           ) : (
