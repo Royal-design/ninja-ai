@@ -16,6 +16,7 @@ import { detectLanguage } from "@/ai/detectLanguage";
 import { Textarea } from "./ui/textarea";
 import { IoIosSend } from "react-icons/io";
 import { useState } from "react";
+import { Button } from "./ui/button";
 
 const inputSchema = chatSchema.pick({
   text: true
@@ -71,7 +72,7 @@ export const TextInput = ({ scrollToBottom }: TextInputProps) => {
                     <Textarea
                       placeholder="Type your message..."
                       {...field}
-                      className="w-full p-4 min-h-[5rem] max-h-[15rem] max-sm:max-h-[8rem]  rounded-3xl resize-none overflow-y-auto scrollbar-hidden"
+                      className="w-full p-4 min-h-[5rem] max-h-[8rem] max-sm:max-h-[8rem]  rounded-4xl resize-none overflow-y-auto scrollbar-hidden"
                     />
                   </div>
                 </FormControl>
@@ -79,18 +80,21 @@ export const TextInput = ({ scrollToBottom }: TextInputProps) => {
               </FormItem>
             )}
           />
-          <button
-            className="ml-2 absolute right-4 top-1/2 -translate-y-1/2 bg-transparent text-primary cursor-pointer"
+          <Button
+            variant="ghost"
+            className="ml-2 hover:bg-transparent absolute right-4 top-1/2 -translate-y-1/2 bg-transparent text-primary cursor-pointer"
             type="submit"
             disabled={loading || form.formState.isSubmitting}
             aria-label="Send Message"
           >
             {loading ? (
-              <span className="w-5 h-5 border-2 border-primary border-t-transparent rounded-full animate-spin"></span>
+              <span className="w-5 h-5 border-2 border-primary  border-t-transparent rounded-full animate-spin"></span>
             ) : (
-              <IoIosSend size={25} />
+              <div className="bg-card hover:border-2 duration-100 dark:border-yellow-500 border rounded-full p-2">
+                <IoIosSend className="size-6" />
+              </div>
             )}
-          </button>
+          </Button>
         </form>
       </Form>
     </div>
