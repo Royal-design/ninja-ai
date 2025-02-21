@@ -5,7 +5,7 @@ function App() {
   return (
     <main className="h-screen overflow-auto scrollbar-hidden ">
       <Toaster position="top-center" />
-      <ChatLayout />;
+      <ChatLayout />
     </main>
   );
 }
