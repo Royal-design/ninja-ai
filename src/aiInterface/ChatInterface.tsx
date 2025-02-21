@@ -90,7 +90,7 @@ export const ChatInterface = () => {
   };
 
   return (
-    <div className="bg-background flex flex-col max-h-screen  p-8 pb-12">
+    <div className="bg-background flex flex-col max-h-screen  p-4 md:p-8 pb-12">
       <Navbar />
       <div className=" mt-8 overflow-auto flex flex-col gap-8 scrollbar-hidden h-screen w-full px-2 md:px-[1rem]">
         {messages.length > 0 ? (

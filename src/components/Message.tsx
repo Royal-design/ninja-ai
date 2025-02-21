@@ -49,8 +49,8 @@ export const Message: React.FC<MessageProps> = ({
 
   return (
     <div
-      className={`flex w-full items-start gap-2 mb-2 flex-wrap ${
-        type === "user" ? "ml-auto justify-end" : "mr-auto justify-start"
+      className={`flex w-full items-start gap-2 mb-2 ${
+        type === "user" ? "ml-auto  flex-row-reverse" : "mr-auto justify-start"
       }`}
     >
       {/* User Icon or Logo */}
@@ -65,7 +65,7 @@ export const Message: React.FC<MessageProps> = ({
       </figure>
 
       {/* Chat Message */}
-      <Card className="p-3 bg-card max-w-full md:w-sm sm:max-w-md w-fit border shadow-none rounded-2xl">
+      <Card className="p-3 bg-card max-w-full w-sm   border shadow-none rounded-2xl">
         <CardHeader className="p-0">
           <CardTitle />
         </CardHeader>
