@@ -67,11 +67,13 @@ export const TextInput = ({ scrollToBottom }: TextInputProps) => {
               <FormItem>
                 <FormLabel />
                 <FormControl>
-                  <Textarea
-                    placeholder="Type your message..."
-                    {...field}
-                    className="w-full scrollbar-hidden p-4 min-h-[5rem] max-h-[15rem] rounded-3xl overflow-auto"
-                  />
+                  <div className="">
+                    <Textarea
+                      placeholder="Type your message..."
+                      {...field}
+                      className="w-full p-4 min-h-[5rem] max-h-[15rem] max-sm:max-h-[8rem]  rounded-3xl resize-none overflow-y-auto scrollbar-hidden"
+                    />
+                  </div>
                 </FormControl>
                 <FormMessage />
               </FormItem>
