@@ -16,7 +16,7 @@ export const googleTranslator = async (text: string, targetLang: string) => {
     const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
     const prompt = `Translate the following text to ${targetLang}: "${text}". 
-    Reply only in JSON format: 
+    Reply only in JSON format and please reply only with the required translated language: 
     {"translatedText": "<Translated Text>", "country": "<Country Name>", "code": "<Country Code>"}.`;
 
     const result = await model.generateContent(prompt);

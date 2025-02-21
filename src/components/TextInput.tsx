@@ -142,6 +142,7 @@ export const TextInput = ({ scrollToBottom }: TextInputProps) => {
   const onSubmit = async (data: InputSchema) => {
     try {
       const detectedLanguage = await googleLanguageDetector(data.text);
+      console.log(detectedLanguage);
 
       dispatch(
         addMessage({

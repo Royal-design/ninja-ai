@@ -1,12 +1,18 @@
-import { AI } from "./aiInterface/AI";
 import { Toaster } from "@/components/ui/sonner";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Home } from "./aiInterface/Home";
+import { TranslatePage } from "./pages/TranslatePage";
 
 function App() {
   return (
-    <main className="h-screen overflow-auto scrollbar-hidden ">
+    <Router>
       <Toaster position="top-center" />
-      <AI />
-    </main>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/translate" element={<TranslatePage />} />
+        <Route path="/summarize" element={<TranslatePage />} />
+      </Routes>
+    </Router>
   );
 }
 
