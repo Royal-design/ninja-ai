@@ -7,18 +7,18 @@ import {
   CardTitle
 } from "@/components/ui/card";
 import { Button } from "./ui/button";
-import { langToCountry, languages } from "@/assets/data/Languages";
+import { languages } from "@/assets/data/Languages";
 import { formatDate } from "@/features/formatDate";
 import logo from "../assets/image/ninjalogo.png";
 import { CiUser } from "react-icons/ci";
-import { getCountryName } from "@/features/getCountryName";
 
 interface MessageProps {
   id: number;
   text: string;
   type: "user" | "translation" | "summary";
   lang: string;
-  onTranslate: (id: number, text: string, lang: string) => void;
+  code: string;
+  onTranslate: (id: number, text: string) => void;
   onSummarize: (id: number, text: string) => void;
   isTranslating: boolean;
   isSummarizing: boolean;
@@ -31,6 +31,7 @@ export const Message: React.FC<MessageProps> = ({
   text,
   type,
   lang,
+  code,
   onTranslate,
   isSummarizing,
   isTranslating,
@@ -38,20 +39,12 @@ export const Message: React.FC<MessageProps> = ({
   translatedLang,
   onSummarize
 }) => {
-  const languageData = languages.find((language) => language.code === lang);
   const translatedLanguageData = languages.find(
     (language) => language.code === translatedLang
   );
   const translatedLanguage = translatedLanguageData?.name;
   const translatedFlag = translatedLanguageData?.flag;
-  const language = languageData?.name || getCountryName(lang);
-  const flag =
-    languageData?.flag ||
-    `https://flagcdn.com/w40/${
-      lang?.toLowerCase() in langToCountry
-        ? langToCountry[lang.toLowerCase()]
-        : lang?.toLowerCase() || { lang }
-    }.png`;
+  const flag = `https://flagcdn.com/w40/${code}.png`;
   const chatDate = formatDate(date);
 
   return (
@@ -106,7 +99,7 @@ export const Message: React.FC<MessageProps> = ({
               {flag && (
                 <img src={flag} alt={lang} className="size-4 rounded-full" />
               )}
-              <p className="text-xs">{language}</p>
+              <p className="text-xs">{lang}</p>
             </div>
           )}
         </CardContent>
@@ -115,14 +108,14 @@ export const Message: React.FC<MessageProps> = ({
           <CardFooter className="p-0 flex gap-2 mt-4 items-end justify-between">
             <div className="flex items-center mt-2">
               <Button
-                onClick={() => onTranslate(id, text, lang)}
+                onClick={() => onTranslate(id, text)}
                 className="ml-2 text-sm text-primary bg-button hover:bg-button-hover transition-colors duration-200"
                 disabled={isTranslating}
               >
                 {isTranslating ? "Translating..." : "Translate"}
               </Button>
 
-              {text.length > 150 && lang === "en" && (
+              {text.length > 150 && (
                 <Button
                   onClick={() => onSummarize(id, text)}
                   className="ml-2 text-sm bg-button hover:bg-button-hover transition-colors duration-200 text-primary"

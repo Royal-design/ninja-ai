@@ -1,5 +1,3 @@
-import { summarizeText } from "@/ai/summarizeText";
-import { translateText } from "@/ai/translateText";
 import {
   setError,
   setSummarizeLoading,
@@ -8,11 +6,13 @@ import {
   setTranslateLoading
 } from "@/redux/slice/chatSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/store";
-import { TextInput } from "./TextInput";
-import { Message } from "./Message";
 import { toast } from "sonner";
-import { Navbar } from "./Navbar";
 import { useEffect, useRef } from "react";
+import { Navbar } from "@/components/Navbar";
+import { Message } from "@/components/Message";
+import { TextInput } from "@/components/TextInput";
+import { googleTranslator } from "@/googleApi/googleTranslator";
+import { googleSummarizer } from "@/googleApi/googleSummarizer";
 
 export const ChatInterface = () => {
   const dispatch = useAppDispatch();
@@ -33,7 +33,7 @@ export const ChatInterface = () => {
     scrollToBottom();
   }, [messages]);
 
-  const handleTranslate = async (id: number, text: string, lang: string) => {
+  const handleTranslate = async (id: number, text: string) => {
     if (!activeChatId) return;
 
     dispatch(setTranslateLoading({ id, loading: true }));
@@ -45,15 +45,21 @@ export const ChatInterface = () => {
     }
 
     try {
-      const translatedText = await translateText(text, lang, selectedLang);
+      const translatedText = await googleTranslator(text, selectedLang);
       setTimeout(() => {
-        dispatch(
-          setTranslatedText({
-            id,
-            text: translatedText,
-            translatedLang: selectedLang
-          })
-        );
+        if (translatedText) {
+          dispatch(
+            setTranslatedText({
+              id,
+              code: translatedText.code,
+              text: translatedText.translatedText,
+              name: translatedText.country,
+              translatedLang: selectedLang
+            })
+          );
+        } else {
+          dispatch(setError("Translation returned null."));
+        }
       }, 200);
     } catch (err) {
       dispatch(setError("Translation failed."));
@@ -68,9 +74,13 @@ export const ChatInterface = () => {
     dispatch(setSummarizeLoading({ id, loading: true }));
 
     try {
-      const summary = await summarizeText(text);
+      const summary = await googleSummarizer(text);
       setTimeout(() => {
-        dispatch(setSummary({ id, text: summary }));
+        if (summary) {
+          dispatch(setSummary({ id, text: summary }));
+        } else {
+          dispatch(setError("Summarization returned null or undefined."));
+        }
       }, 200);
     } catch (err) {
       dispatch(setError("Summarization failed."));
@@ -92,6 +102,7 @@ export const ChatInterface = () => {
                 text={msg.text}
                 type={msg.type}
                 lang={msg.lang}
+                code={msg.code ?? ""}
                 translatedLang={msg.translatedLang ?? ""}
                 onTranslate={handleTranslate}
                 onSummarize={handleSummarize}

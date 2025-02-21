@@ -8,43 +8,43 @@ import {
 } from "./ui/select";
 import { setSelectedLang } from "@/redux/slice/chatSlice";
 import { HiOutlineLanguage } from "react-icons/hi2";
-import { langToCountry, languages } from "@/assets/data/Languages";
-import { getCountryName } from "@/features/getCountryName";
+import { languages } from "@/assets/data/Languages";
 
 export const LanguageOptions = () => {
   const dispatch = useAppDispatch();
-  const { selectedLang, detectedLang } = useAppSelector((state) => state.chat);
+  const { selectedLang, detectedName, detectedCode } = useAppSelector(
+    (state) => state.chat
+  );
+
   const handleSwapLanguages = () => {
-    if (detectedLang !== selectedLang) {
-      dispatch(setSelectedLang(detectedLang));
+    if (detectedCode !== selectedLang) {
+      dispatch(setSelectedLang(detectedCode));
     }
   };
+
+  const flagUrl = detectedCode
+    ? `https://flagcdn.com/w40/${detectedCode}.png`
+    : "/default-flag.png";
+
   return (
     <div className="flex items-center justify-center gap-4">
       <div className="flex items-center border rounded-md p-1 px-2 gap-2">
         <img
-          src={
-            languages.find((lang) => lang.code === detectedLang)?.flag ||
-            `https://flagcdn.com/w40/${
-              detectedLang?.toLowerCase() in langToCountry
-                ? langToCountry[detectedLang.toLowerCase()]
-                : detectedLang?.toLowerCase() || { detectedLang }
-            }.png`
-          }
+          src={flagUrl}
           alt="Detected Flag"
           className="w-6 h-6 rounded-full"
         />
-
         <span className="text-sm font-semibold">
-          {languages.find((lang) => lang.code === detectedLang)?.name ||
-            getCountryName(detectedLang)}
+          {detectedName || "Unknown"}
         </span>
       </div>
 
+      {/* Language Swap Button */}
       <button onClick={handleSwapLanguages} className="text-2xl">
         <HiOutlineLanguage />
       </button>
 
+      {/* Language Selection Dropdown */}
       <div className="flex items-center gap-2">
         <Select
           value={selectedLang}
@@ -56,7 +56,9 @@ export const LanguageOptions = () => {
           <SelectContent>
             {languages.map((lang) => (
               <SelectItem
-                disabled={lang.code === detectedLang}
+                disabled={
+                  lang.name.toLowerCase() === detectedCode.toLowerCase()
+                }
                 key={lang.code}
                 value={lang.code}
               >

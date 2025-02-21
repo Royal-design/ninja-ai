@@ -1,62 +1,84 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-interface Message {
+export interface MessageProps {
   id: number;
   text: string;
   lang: string;
+  code?: string;
+  name?: string;
   type: "user" | "translation" | "summary";
   timestamp: string;
   isTranslating?: boolean;
   isSummarizing?: boolean;
   translatedLang?: string;
-  isLoading?: boolean;
 }
 
 interface Chat {
   id: string;
-  messages: Message[];
+  messages: MessageProps[];
 }
 
 interface ChatState {
   chats: Chat[];
   activeChatId: string | null;
-  detectedLang: string;
   selectedLang: string;
+  detectedCode: string;
+  detectedName: string;
   error: string | null;
 }
 
 const loadChatsFromStorage = (): ChatState => {
-  const storedChats = localStorage.getItem("chats");
-  const storedActiveChat = localStorage.getItem("activeChatId");
-  const chats = storedChats ? JSON.parse(storedChats) : [];
-  const activeChatId = storedActiveChat
-    ? JSON.parse(storedActiveChat)
-    : chats.length > 0
-    ? chats[0].id
-    : null;
+  try {
+    const storedChats = localStorage.getItem("chats");
+    const storedActiveChat = localStorage.getItem("activeChatId");
 
-  return {
-    chats,
-    activeChatId,
-    detectedLang: "en",
-    selectedLang: "",
-    error: null
-  };
+    const chats: Chat[] = storedChats ? JSON.parse(storedChats) : [];
+    const activeChatId = storedActiveChat
+      ? JSON.parse(storedActiveChat)
+      : chats.length > 0
+      ? chats[0].id
+      : null;
+
+    return {
+      chats,
+      activeChatId,
+      detectedCode: "en",
+      selectedLang: "",
+      detectedName: "English",
+      error: null
+    };
+  } catch (error) {
+    console.error("Error loading chats from storage:", error);
+    return {
+      chats: [],
+      activeChatId: null,
+      detectedCode: "en",
+      detectedName: "English",
+      selectedLang: "",
+      error: null
+    };
+  }
 };
 
 const saveChatsToStorage = (chats: Chat[], activeChatId: string | null) => {
-  const sanitizedChats = chats.map((chat) => ({
-    ...chat,
-    messages: chat.messages.map(
-      ({ isTranslating, isSummarizing, ...msg }) => msg
-    )
-  }));
+  try {
+    const sanitizedChats = chats.map((chat) => ({
+      ...chat,
+      messages: chat.messages.map(
+        ({ isTranslating, isSummarizing, ...msg }) => msg
+      )
+    }));
 
-  localStorage.setItem("chats", JSON.stringify(sanitizedChats));
-  localStorage.setItem("activeChatId", JSON.stringify(activeChatId));
+    localStorage.setItem("chats", JSON.stringify(sanitizedChats));
+    localStorage.setItem("activeChatId", JSON.stringify(activeChatId));
+  } catch (error) {
+    console.error("Error saving chats to storage:", error);
+  }
 };
 
 const generateChatId = () => `chat-${Date.now()}`;
+const generateMessageId = (messages: MessageProps[]) =>
+  messages.length > 0 ? messages[messages.length - 1].id + 1 : 1;
 
 const initialState: ChatState = loadChatsFromStorage();
 
@@ -85,7 +107,12 @@ export const chatSlice = createSlice({
 
     addMessage: (
       state,
-      action: PayloadAction<{ text: string; lang: string }>
+      action: PayloadAction<{
+        text: string;
+        lang: string;
+        code: string;
+        name: string;
+      }>
     ) => {
       if (!state.activeChatId) {
         const newChat: Chat = { id: generateChatId(), messages: [] };
@@ -97,14 +124,17 @@ export const chatSlice = createSlice({
       if (!chat) return;
 
       chat.messages.push({
-        id: chat.messages.length + 1,
+        id: generateMessageId(chat.messages),
         text: action.payload.text,
         lang: action.payload.lang,
+        code: action.payload.code,
+        name: action.payload.name,
         type: "user",
         timestamp: new Date().toISOString()
       });
 
-      state.detectedLang = action.payload.lang;
+      state.detectedCode = action.payload.code;
+      state.detectedName = action.payload.lang;
       saveChatsToStorage(state.chats, state.activeChatId);
     },
 
@@ -113,6 +143,8 @@ export const chatSlice = createSlice({
       action: PayloadAction<{
         id: number;
         text: string;
+        name: string;
+        code: string;
         translatedLang: string;
       }>
     ) => {
@@ -122,10 +154,12 @@ export const chatSlice = createSlice({
       if (!chat) return;
 
       chat.messages.push({
-        id: chat.messages.length + 1,
+        id: generateMessageId(chat.messages),
         text: action.payload.text,
         lang: state.selectedLang,
         translatedLang: action.payload.translatedLang,
+        name: action.payload.name,
+        code: action.payload.code,
         type: "translation",
         timestamp: new Date().toISOString()
       });
@@ -143,7 +177,7 @@ export const chatSlice = createSlice({
       if (!chat) return;
 
       chat.messages.push({
-        id: chat.messages.length + 1,
+        id: generateMessageId(chat.messages),
         text: action.payload.text,
         lang: "en",
         type: "summary",
@@ -161,10 +195,6 @@ export const chatSlice = createSlice({
       }
 
       saveChatsToStorage(state.chats, state.activeChatId);
-    },
-
-    setDetectedLang: (state, action: PayloadAction<string>) => {
-      state.detectedLang = action.payload;
     },
 
     setSelectedLang: (state, action: PayloadAction<string>) => {
@@ -214,7 +244,6 @@ export const {
   setTranslatedText,
   setSummary,
   deleteChat,
-  setDetectedLang,
   setSelectedLang,
   setError,
   setSummarizeLoading,

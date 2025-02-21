@@ -21,7 +21,7 @@ import {
   deleteChat
 } from "@/redux/slice/chatSlice";
 import { useState } from "react";
-import { ChatInterface } from "@/components/ChatInterface";
+import { ChatInterface } from "@/aiInterface/ChatInterface";
 
 export const ChatLayout = () => {
   const dispatch = useAppDispatch();
