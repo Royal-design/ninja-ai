@@ -8,7 +8,7 @@ import {
 } from "./ui/select";
 import { setSelectedLang } from "@/redux/slice/chatSlice";
 import { HiOutlineLanguage } from "react-icons/hi2";
-import { languages } from "@/assets/data/Languages";
+import { langToCountry, languages } from "@/assets/data/Languages";
 import { getCountryName } from "@/features/getCountryName";
 
 export const LanguageOptions = () => {
@@ -21,28 +21,30 @@ export const LanguageOptions = () => {
   };
   return (
     <div className="flex items-center justify-center gap-4">
-      {/* Detected Language */}
       <div className="flex items-center border rounded-md p-1 px-2 gap-2">
         <img
           src={
             languages.find((lang) => lang.code === detectedLang)?.flag ||
-            `https://flagcdn.com/w40/${detectedLang}.png`
+            `https://flagcdn.com/w40/${
+              detectedLang?.toLowerCase() in langToCountry
+                ? langToCountry[detectedLang.toLowerCase()]
+                : detectedLang?.toLowerCase() || { detectedLang }
+            }.png`
           }
           alt="Detected Flag"
-          className="w-6 h-6 rounded-full "
+          className="w-6 h-6 rounded-full"
         />
+
         <span className="text-sm font-semibold">
           {languages.find((lang) => lang.code === detectedLang)?.name ||
             getCountryName(detectedLang)}
         </span>
       </div>
 
-      {/* Switch Icon */}
       <button onClick={handleSwapLanguages} className="text-2xl">
         <HiOutlineLanguage />
       </button>
 
-      {/* Target Language (Changeable) */}
       <div className="flex items-center gap-2">
         <Select
           value={selectedLang}

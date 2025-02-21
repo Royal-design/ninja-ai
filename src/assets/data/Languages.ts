@@ -6,3 +6,45 @@ export const languages = [
   { code: "tr", name: "Turkish", flag: "https://flagcdn.com/w40/tr.png" },
   { code: "fr", name: "French", flag: "https://flagcdn.com/w40/fr.png" }
 ];
+export const langToCountry: Record<string, string> = {
+  yo: "ng",
+  ko: "kr",
+  zh: "cn",
+  "zh-tw": "tw",
+  "zh-hk": "hk",
+  ja: "jp",
+  ru: "ru",
+  ar: "sa",
+  he: "il",
+  hi: "in",
+  bn: "bd",
+  pa: "pk",
+  fa: "ir",
+  ta: "lk",
+  ur: "pk",
+  ms: "my",
+  id: "id",
+  th: "th",
+  vi: "vn"
+};
+export const langToCountryName: Record<string, string> = {
+  yo: "Yoruba",
+  ko: "Korea",
+  zh: "China",
+  "zh-tw": "Taiwan",
+  "zh-hk": "Hong Kong",
+  ja: "Japan",
+  ru: "Russia",
+  ar: "Saudi Arabia",
+  he: "Israel",
+  hi: "India",
+  bn: "Bangladesh",
+  pa: "Pakistan",
+  fa: "Iran",
+  ta: "Sri Lanka",
+  ur: "Pakistan",
+  ms: "Malaysia",
+  id: "Indonesia",
+  th: "Thailand",
+  vi: "Vietnam"
+};
