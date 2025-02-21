@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Card,
   CardContent,
@@ -11,6 +11,8 @@ import { languages } from "@/assets/data/Languages";
 import { formatDate } from "@/features/formatDate";
 import logo from "../assets/image/ninjalogo.png";
 import { CiUser } from "react-icons/ci";
+import { BsFillVolumeUpFill, BsFillStopFill } from "react-icons/bs"; // Import icons
+import { speakText } from "@/features/outputSpeech";
 
 interface MessageProps {
   id: number;
@@ -39,6 +41,7 @@ export const Message: React.FC<MessageProps> = ({
   translatedLang,
   onSummarize
 }) => {
+  const [isSpeaking, setIsSpeaking] = useState(false);
   const translatedLanguageData = languages.find(
     (language) => language.code === translatedLang
   );
@@ -77,19 +80,45 @@ export const Message: React.FC<MessageProps> = ({
             ) : (
               <div className="flex flex-col gap-4">
                 <p className="leading-[150%] break-words">{text}</p>
-
-                {type === "translation" && (
-                  <div className="flex gap-4 mt-2 items-center">
-                    {translatedFlag && (
-                      <img
-                        src={translatedFlag}
-                        alt={translatedLang}
-                        className="size-4 rounded-full"
-                      />
-                    )}
-                    <p className="text-xs">{translatedLanguage}</p>
+                <div className="flex justify-between w-full mt-2 items-center">
+                  {type === "translation" && (
+                    <div className="flex gap-4 w-full items-center">
+                      {translatedFlag && (
+                        <img
+                          src={translatedFlag}
+                          alt={translatedLang}
+                          className="size-4 rounded-full"
+                        />
+                      )}
+                      <p className="text-xs">{translatedLanguage}</p>
+                    </div>
+                  )}
+                  <div className=" w-full justify-end items-center flex gap-2  ">
+                    <button
+                      onClick={() =>
+                        speakText(
+                          text,
+                          translatedLang,
+                          isSpeaking,
+                          setIsSpeaking
+                        )
+                      }
+                      className="text-primary hover:text-blue-500 transition"
+                      aria-label={
+                        isSpeaking ? "Stop speaking" : "Listen to translation"
+                      }
+                    >
+                      {isSpeaking ? (
+                        <BsFillStopFill size={20} />
+                      ) : (
+                        <BsFillVolumeUpFill size={20} />
+                      )}
+                    </button>
+                    <p className="text-[10px] text-primary text-center sm:text-right">
+                      {chatDate}
+                    </p>
                   </div>
-                )}
+                </div>
               </div>
             )}
           </div>
@@ -100,6 +129,7 @@ export const Message: React.FC<MessageProps> = ({
               {flag && (
                 <img src={flag} alt={lang} className="size-4 rounded-full" />
               )}
+
               <p className="text-xs">{lang}</p>
             </div>
           )}
@@ -107,8 +137,8 @@ export const Message: React.FC<MessageProps> = ({
 
         {/* Buttons for User Messages */}
         {type === "user" && (
-          <CardFooter className="p-0 flex flex-wrap gap-2 mt-4 items-end justify-start sm:justify-end">
-            <div className="flex flex-wrap items-center gap-2 sm:gap-4 w-full">
+          <CardFooter className="p-0 flex flex-col md:flex-row gap-2 mt-4 items-end justify-start sm:justify-end">
+            <div className="flex items-center gap-2 sm:gap-4 w-full">
               <Button
                 onClick={() => onTranslate(id, text)}
                 className="text-sm text-primary bg-button hover:bg-button-hover transition-colors duration-200 w-full sm:w-auto"
@@ -127,10 +157,26 @@ export const Message: React.FC<MessageProps> = ({
                 </Button>
               )}
             </div>
-
-            <p className="text-[10px] text-primary text-center sm:text-right">
-              {chatDate}
-            </p>
+            <div className=" w-full items-center  md:justify-end flex gap-2 ">
+              <button
+                onClick={() =>
+                  speakText(text, translatedLang, isSpeaking, setIsSpeaking)
+                }
+                className="text-primary  hover:text-blue-500 transition"
+                aria-label={
+                  isSpeaking ? "Stop speaking" : "Listen to translation"
+                }
+              >
+                {isSpeaking ? (
+                  <BsFillStopFill size={20} />
+                ) : (
+                  <BsFillVolumeUpFill size={20} />
+                )}
+              </button>
+              <p className="text-[10px] text-primary text-center sm:text-right">
+                {chatDate}
+              </p>
+            </div>
           </CardFooter>
         )}
       </Card>

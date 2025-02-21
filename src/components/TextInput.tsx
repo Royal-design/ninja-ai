@@ -76,7 +76,6 @@ export const TextInput = ({ scrollToBottom }: TextInputProps) => {
     recognition.onresult = (event: any) => {
       const spokenText = event.results[0][0].transcript;
 
-      // ✅ Fix: Get current value before updating
       const currentText = form.getValues("text");
       form.setValue("text", currentText + " " + spokenText);
     };
@@ -114,7 +113,7 @@ export const TextInput = ({ scrollToBottom }: TextInputProps) => {
                     <button
                       type="button"
                       onClick={startListening}
-                      className="absolute left-4 top-1/2 -translate-y-1/2 text-primary"
+                      className="absolute cursor-pointer left-4 top-1/2 -translate-y-1/2 text-primary"
                     >
                       {isListening ? (
                         <FaMicrophoneSlash size={20} />
