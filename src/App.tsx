@@ -9,8 +9,7 @@ function App() {
       <Toaster position="top-center" />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/translate" element={<TranslatePage />} />
-        <Route path="/summarize" element={<TranslatePage />} />
+        <Route path="/chat" element={<TranslatePage />} />
       </Routes>
     </Router>
   );

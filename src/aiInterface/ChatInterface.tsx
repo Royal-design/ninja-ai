@@ -5,6 +5,8 @@ import {
   setTranslatedText,
   setTranslateLoading
 } from "@/redux/slice/chatSlice";
+import { motion } from "framer-motion";
+
 import { useAppDispatch, useAppSelector } from "@/redux/store";
 import { toast } from "sonner";
 import { useEffect, useRef } from "react";
@@ -13,6 +15,7 @@ import { Message } from "@/components/Message";
 import { TextInput } from "@/components/TextInput";
 import { googleTranslator } from "@/googleApi/googleTranslator";
 import { googleSummarizer } from "@/googleApi/googleSummarizer";
+import { Button } from "@/components/ui/button";
 
 export const ChatInterface = () => {
   const dispatch = useAppDispatch();
@@ -114,9 +117,32 @@ export const ChatInterface = () => {
             <div ref={messagesEndRef} />
           </>
         ) : (
-          <p className="text-center lg:text-4xl md:text-2xl max-sm:text-2xl  text-muted-foreground mt-10">
-            What can I help you with?
-          </p>
+          <motion.div
+            className="mt-2"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5, duration: 0.8 }}
+          >
+            <p className="text-center text-3xl md:text-4xl text-muted-foreground mt-10">
+              What can I help you with?
+            </p>
+            <p className="text-sm text-slate-400 px-8 mt-3 text-center">
+              Summarization is available only for texts with a minimum of 150
+              words
+            </p>
+
+            <div className=" justify-center mt-4 flex flex-wrap  gap-2">
+              <Button className="px-2 text-xs md:text-sm h-4 w-auto py-3 bg-blue-500 rounded-lg text-white font-bold hover:bg-blue-600 transition">
+                Translation
+              </Button>
+              <Button className="px-2 text-xs md:text-sm h-4 w-auto py-3 bg-[#421f08] rounded-lg text-white font-bold hover:bg-[#4d250b] transition">
+                Language Detection
+              </Button>
+              <Button className="px-2 text-xs md:text-sm h-4 w-auto py-3 bg-green-500 rounded-lg text-white font-bold hover:bg-green-600 transition">
+                Summarization
+              </Button>
+            </div>
+          </motion.div>
         )}
       </div>
 
