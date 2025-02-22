@@ -9,7 +9,7 @@ export const Home = () => {
       <motion.img
         src={logo}
         alt="AI Translation"
-        className="w-20 md:w-20 mt-8"
+        className="w-20 md:w-20"
         initial={{ opacity: 0, scale: 0.7 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 1.1 }}
@@ -26,7 +26,7 @@ export const Home = () => {
         </h1>
         <p className="text-lg md:text-xl mt-12 text-gray-500 dark:text-gray-300">
           AI-powered <span className="text-blue-400">Translation,</span>{" "}
-          <span className="text-[#421f08]">Language detection</span>{" "}
+          <span className="text-[#4c310f]">Language detection</span>{" "}
           <span className=" text-green-400"> and Summarization</span> at your
           fingertips.
         </p>
@@ -56,7 +56,7 @@ export const Home = () => {
         transition={{ delay: 0.5, duration: 0.8 }}
       >
         <Link to="/chat">
-          <Button className="px-6 py-3 bg-blue-500 rounded-lg text-white font-bold hover:bg-blue-600 transition">
+          <Button className="px-6 py-3 bg-[#241003] rounded-lg text-white font-bold hover:bg-[#4c310f] transition">
             Get Started
           </Button>
         </Link>
