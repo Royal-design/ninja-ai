@@ -2,8 +2,11 @@ import { motion } from "framer-motion";
 import logo from "../assets/image/ninjalogo.png";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import { useAppDispatch } from "@/redux/store";
+import { createNewChat } from "@/redux/slice/chatSlice";
 
 export const Home = () => {
+  const dispatch = useAppDispatch();
   return (
     <main className="flex flex-col gap-4 items-center justify-center min-h-screen bg-background text-white px-6">
       <motion.img
@@ -55,7 +58,11 @@ export const Home = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.5, duration: 0.8 }}
       >
-        <Link to="/chat">
+        <Link
+          to="/chat"
+          onClick={() => dispatch(createNewChat())}
+          className="cursor-pointer"
+        >
           <Button className="px-6 py-3 bg-[#241003] rounded-lg text-white font-bold hover:bg-[#4c310f] transition">
             Get Started
           </Button>

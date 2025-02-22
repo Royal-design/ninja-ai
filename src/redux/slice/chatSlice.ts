@@ -43,7 +43,7 @@ const loadChatsFromStorage = (): ChatState => {
       chats,
       activeChatId,
       detectedCode: "us",
-      selectedLang: "",
+      selectedLang: "en",
       detectedName: "English",
       error: null
     };
@@ -54,7 +54,7 @@ const loadChatsFromStorage = (): ChatState => {
       activeChatId: null,
       detectedCode: "us",
       detectedName: "English",
-      selectedLang: "",
+      selectedLang: "en",
       error: null
     };
   }

@@ -55,13 +55,7 @@ export const LanguageOptions = () => {
           </SelectTrigger>
           <SelectContent>
             {languages.map((lang) => (
-              <SelectItem
-                disabled={
-                  lang.name.toLowerCase() === detectedCode.toLowerCase()
-                }
-                key={lang.code}
-                value={lang.code}
-              >
+              <SelectItem key={lang.code} value={lang.code}>
                 <div className="flex items-center gap-2">
                   <img
                     src={lang.flag}
