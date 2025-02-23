@@ -8,7 +8,7 @@ import { createNewChat } from "@/redux/slice/chatSlice";
 export const Home = () => {
   const dispatch = useAppDispatch();
   return (
-    <main className="flex flex-col gap-4 items-center justify-center min-h-screen bg-background text-white px-6">
+    <main className="flex flex-col gap-4 items-center justify-center min-h-screen bg-background  px-6">
       <motion.img
         src={logo}
         alt="AI Translation"

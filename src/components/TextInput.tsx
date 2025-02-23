@@ -18,6 +18,7 @@ import { useState } from "react";
 import { Button } from "./ui/button";
 import { googleLanguageDetector } from "@/googleApi/googleLanguageDetector";
 import { FaMicrophone, FaMicrophoneSlash } from "react-icons/fa"; // Microphone Icons
+import { toast } from "sonner";
 
 const inputSchema = chatSchema.pick({
   text: true
@@ -41,7 +42,6 @@ export const TextInput = ({ scrollToBottom }: TextInputProps) => {
   const onSubmit = async (data: InputSchema) => {
     try {
       const detectedLanguage = await googleLanguageDetector(data.text);
-      console.log(detectedLanguage);
 
       dispatch(
         addMessage({
@@ -53,16 +53,18 @@ export const TextInput = ({ scrollToBottom }: TextInputProps) => {
       );
       form.reset();
       scrollToBottom();
-    } catch (err) {
-      console.error("Language Detection Failed:", err);
-      dispatch(setError("Failed to detect language."));
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        toast.error(`Language Detection Failed: ${err.message}`);
+        dispatch(setError("Failed to detect language."));
+      }
     }
   };
 
   // Speech-to-Text Functionality
   const startListening = () => {
     if (!("webkitSpeechRecognition" in window)) {
-      alert("Your browser does not support speech recognition.");
+      toast.warning("Your browser does not support speech recognition.");
       return;
     }
 
