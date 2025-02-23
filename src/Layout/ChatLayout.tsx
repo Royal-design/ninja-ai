@@ -20,14 +20,26 @@ import {
   setActiveChat,
   deleteChat
 } from "@/redux/slice/chatSlice";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { ChatInterface } from "@/aiInterface/ChatInterface";
 
 export const ChatLayout = () => {
   const dispatch = useAppDispatch();
   const { chats, activeChatId } = useAppSelector((state) => state.chat);
   const [open, setOpen] = useState<boolean>(true);
-
+  const sortedChats = useMemo(() => {
+    return [...chats].sort((a, b) => {
+      const lastMessageA =
+        a.messages.length > 0
+          ? new Date(a.messages[a.messages.length - 1].timestamp).getTime()
+          : 0;
+      const lastMessageB =
+        b.messages.length > 0
+          ? new Date(b.messages[b.messages.length - 1].timestamp).getTime()
+          : 0;
+      return lastMessageB - lastMessageA;
+    });
+  }, [chats]);
   return (
     <SidebarProvider open={open} onOpenChange={setOpen}>
       <Sidebar collapsible="offcanvas" className="max-w-md">
@@ -47,7 +59,7 @@ export const ChatLayout = () => {
           <SidebarGroup>
             <SidebarGroupContent>
               <SidebarMenu className="flex flex-col gap-2">
-                {chats.slice().map((chat) => (
+                {sortedChats.slice().map((chat) => (
                   <SidebarMenuItem
                     key={chat.id}
                     className="flex items-center justify-between"
