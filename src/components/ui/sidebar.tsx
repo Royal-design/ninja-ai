@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
+import { HiOutlineMenuAlt2 } from "react-icons/hi";
 import {
   Sheet,
   SheetContent,
@@ -267,7 +268,13 @@ function SidebarTrigger({
       }}
       {...props}
     >
-      <LuPanelRightClose strokeWidth={1} className="size-8" />
+      <div className="max-sm:hidden">
+        <LuPanelRightClose strokeWidth={1} className="size-8" />
+      </div>
+      <div className="md:hidden">
+        <HiOutlineMenuAlt2 strokeWidth={1} className="size-8" />
+      </div>
+
       <span className="sr-only">Toggle Sidebar</span>
     </Button>
   );

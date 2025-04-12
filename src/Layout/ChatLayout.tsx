@@ -43,19 +43,19 @@ export const ChatLayout = () => {
   return (
     <SidebarProvider open={open} onOpenChange={setOpen}>
       <Sidebar collapsible="offcanvas" className="max-w-md">
-        <SidebarHeader className="bg-card border-b dark:border-slate-800duration-75 transition md:hidden">
+        <SidebarHeader className="bg-card border-b dark:border-slate-800  md:hidden">
           <h2 className="text-lg font-semibold text-center">Chat Menu</h2>
         </SidebarHeader>
         <SidebarHeader
           onClick={() => dispatch(createNewChat())}
-          className="bg-card border-b dark:border-slate-800  duration-75 transition "
+          className="bg-card border-b dark:border-slate-800"
         >
           <div className="flex justify-end">
             <IoCreateOutline size={30} />
           </div>
         </SidebarHeader>
 
-        <SidebarContent className="bg-background duration-75 transition text-primary">
+        <SidebarContent className="bg-background text-primary">
           <SidebarGroup>
             <SidebarGroupContent>
               <SidebarMenu className="flex flex-col gap-2">
@@ -66,7 +66,7 @@ export const ChatLayout = () => {
                   >
                     <SidebarMenuButton
                       onClick={() => dispatch(setActiveChat(chat.id))}
-                      className={`flex-grow flex items-center gap-2 p-2 rounded transition ${
+                      className={`flex-grow flex items-center gap-2 p-2 rounded transition-color ${
                         activeChatId === chat.id
                           ? "bg-button hover:bg-button-hover"
                           : ""
