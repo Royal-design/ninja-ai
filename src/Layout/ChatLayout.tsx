@@ -48,10 +48,10 @@ export const ChatLayout = () => {
         </SidebarHeader>
         <SidebarHeader
           onClick={() => dispatch(createNewChat())}
-          className="bg-card border-b dark:border-slate-800 duration-75 transition "
+          className="bg-card border-b dark:border-slate-800  duration-75 transition "
         >
           <div className="flex justify-end">
-            <IoCreateOutline size={25} />
+            <IoCreateOutline size={30} />
           </div>
         </SidebarHeader>
 
@@ -96,11 +96,11 @@ export const ChatLayout = () => {
           </div>
         </SidebarFooter>
       </Sidebar>
-      <SidebarTrigger className="text-primary fixed top-3 left-0 z-10 mr-5 hover:bg-card" />
+      <SidebarTrigger className="text-primary fixed max-sm:top-4 top-3 left-2 z-10 mr-5 hover:bg-card" />
       <main className="w-full relative h-screen overflow-hidden bg-background p-4   max-sm:px-0">
         <div className="bg-background overflow-hidden">
           {activeChatId ? (
-            <ChatInterface />
+            <ChatInterface isSidebarOpen={open} />
           ) : (
             <p className="text-center text-primary mt-10">
               Select a chat to start messaging

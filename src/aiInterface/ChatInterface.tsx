@@ -17,7 +17,11 @@ import { googleTranslator } from "@/googleApi/googleTranslator";
 import { googleSummarizer } from "@/googleApi/googleSummarizer";
 import { Button } from "@/components/ui/button";
 
-export const ChatInterface = () => {
+export interface SidebarProps {
+  isSidebarOpen: boolean;
+}
+
+export const ChatInterface = ({ isSidebarOpen }: SidebarProps) => {
   const dispatch = useAppDispatch();
   const { chats, activeChatId, selectedLang } = useAppSelector(
     (state) => state.chat
@@ -94,8 +98,8 @@ export const ChatInterface = () => {
 
   return (
     <div className="bg-background flex flex-col max-h-screen  p-4 md:p-8 pb-12">
-      <Navbar />
-      <div className=" mt-8 overflow-auto flex flex-col gap-8 scrollbar-hidden h-screen w-full px-2 md:px-[1rem]">
+      <Navbar isSidebarOpen={isSidebarOpen} />
+      <div className=" mt-8 overflow-auto py-20 flex flex-col gap-8 scrollbar-hidden h-screen w-full px-2 md:px-[1rem]">
         {messages.length > 0 ? (
           <>
             {messages.map((msg) => (
@@ -145,8 +149,15 @@ export const ChatInterface = () => {
           </motion.div>
         )}
       </div>
-
-      <TextInput scrollToBottom={scrollToBottom} />
+      <div
+        className={`fixed bottom-12 bg-background w-full transition-all duration-200 px-6 md:px-0 flex justify-center ${
+          isSidebarOpen ? "md:left-35" : "md:left-0"
+        } left-0`}
+      >
+        <div className="w-full max-w-2xl">
+          <TextInput scrollToBottom={scrollToBottom} />
+        </div>
+      </div>
     </div>
   );
 };
