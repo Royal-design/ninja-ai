@@ -12,7 +12,7 @@ export const Navbar = ({ isSidebarOpen }: SidebarProps) => {
   return (
     <div className="w-full bg-background pt-4 ">
       <div
-        className={`fixed top-4 pb-10 flex bg-background items-center w-full max-sm:flex-col max-sm:gap-3 justify-between max-sm:justify-center max-sm:mb-4 ${
+        className={`fixed top-0 pt-4 pb-10 flex bg-background items-center w-full max-sm:flex-col max-sm:gap-3 justify-between max-sm:justify-center max-sm:mb-4 ${
           isSidebarOpen ? "md:left-20 md:pl-50 md:pr-30" : "md:left-0 md:px-30"
         } left-0 transition-all`}
       >

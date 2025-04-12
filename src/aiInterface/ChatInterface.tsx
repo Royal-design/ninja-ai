@@ -150,7 +150,7 @@ export const ChatInterface = ({ isSidebarOpen }: SidebarProps) => {
         )}
       </div>
       <div
-        className={`fixed bottom-12 bg-background w-full transition-all duration-200 px-6 md:px-0 flex justify-center ${
+        className={`fixed bottom-0 pb-12 bg-background w-full transition-all duration-200 px-6 md:px-0 flex justify-center ${
           isSidebarOpen ? "md:left-35" : "md:left-0"
         } left-0`}
       >
