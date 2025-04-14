@@ -127,10 +127,10 @@ export const ChatInterface = ({ isSidebarOpen }: SidebarProps) => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5, duration: 0.8 }}
           >
-            <p className="text-center text-3xl md:text-4xl text-muted-foreground mt-10">
+            <p className="text-center text-3xl md:text-4xl text-slate-600 dark:text-slate-300  mt-10">
               What can I help you with?
             </p>
-            <p className="text-sm text-slate-400 px-8 mt-3 text-center">
+            <p className="text-sm text-slate-600 dark:text-slate-300 px-8 mt-3 text-center">
               Summarization is available only for texts with a minimum of 150
               words
             </p>

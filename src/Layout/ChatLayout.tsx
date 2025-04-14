@@ -22,6 +22,8 @@ import {
 } from "@/redux/slice/chatSlice";
 import { useMemo, useState } from "react";
 import { ChatInterface } from "@/aiInterface/ChatInterface";
+import { Button } from "@/components/ui/button";
+import { motion } from "framer-motion";
 
 export const ChatLayout = () => {
   const dispatch = useAppDispatch();
@@ -98,13 +100,35 @@ export const ChatLayout = () => {
       </Sidebar>
       <SidebarTrigger className="text-primary fixed max-sm:top-4 top-3 left-2 z-10 mr-5 hover:bg-card" />
       <main className="w-full relative h-screen overflow-hidden bg-background p-4   max-sm:px-0">
-        <div className="bg-background overflow-hidden">
+        <div className="bg-background h-full overflow-hidden">
           {activeChatId ? (
             <ChatInterface isSidebarOpen={open} />
           ) : (
-            <p className="text-center text-primary mt-10">
-              Select a chat to start messaging
-            </p>
+            <motion.div
+              className="mt-2 flex flex-col justify-center h-full"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5, duration: 0.8 }}
+            >
+              <p className="text-center text-3xl md:text-4xl text-slate-600 dark:text-slate-300  mt-10">
+                What can I help you with?
+              </p>
+              <p className="text-sm text-slate-600 dark:text-slate-300 px-8 mt-3 text-center">
+                Summarization is available only for texts with a minimum of 150
+                words
+              </p>
+
+              <div className=" justify-center  mt-4 flex flex-wrap  gap-2">
+                <div
+                  onClick={() => dispatch(createNewChat())}
+                  className="cursor-pointer"
+                >
+                  <Button className="rounded-2xl cursor-pointer border bg-button hover:bg-button-hover transition-colors duration-100 text-slate-600 dark:text-slate-300">
+                    Create New Chat
+                  </Button>
+                </div>
+              </div>
+            </motion.div>
           )}
         </div>
       </main>
