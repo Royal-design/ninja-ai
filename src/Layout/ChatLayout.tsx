@@ -13,7 +13,7 @@ import {
   SidebarTrigger
 } from "@/components/ui/sidebar";
 import { Trash2 } from "lucide-react";
-import { IoCreateOutline } from "react-icons/io5";
+import { TbMessageCirclePlus } from "react-icons/tb";
 import { useAppDispatch, useAppSelector } from "@/redux/store";
 import {
   createNewChat,
@@ -53,7 +53,7 @@ export const ChatLayout = () => {
           className="bg-card border-b dark:border-slate-800"
         >
           <div className="flex justify-end">
-            <IoCreateOutline size={30} />
+            <TbMessageCirclePlus size={30} strokeWidth={1} />
           </div>
         </SidebarHeader>
 

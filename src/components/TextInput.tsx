@@ -1,13 +1,6 @@
 import { chatSchema } from "@/chatSchema";
 import { z } from "zod";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage
-} from "./ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel } from "./ui/form";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAppDispatch } from "@/redux/store";
@@ -17,9 +10,8 @@ import { IoIosSend } from "react-icons/io";
 import { useState } from "react";
 import { Button } from "./ui/button";
 import { googleLanguageDetector } from "@/googleApi/googleLanguageDetector";
-import { FaMicrophone, FaMicrophoneSlash } from "react-icons/fa"; // Microphone Icons
+import { FaMicrophone, FaMicrophoneSlash } from "react-icons/fa";
 import { toast } from "sonner";
-
 const inputSchema = chatSchema.pick({
   text: true
 });
@@ -31,13 +23,14 @@ type TextInputProps = {
 
 export const TextInput = ({ scrollToBottom }: TextInputProps) => {
   const dispatch = useAppDispatch();
-  const [loading] = useState(false);
   const [isListening, setIsListening] = useState(false);
 
   const form = useForm<InputSchema>({
     resolver: zodResolver(inputSchema),
     defaultValues: { text: "" }
   });
+
+  const textValue = form.watch("text") || "";
 
   const onSubmit = async (data: InputSchema) => {
     try {
@@ -96,55 +89,62 @@ export const TextInput = ({ scrollToBottom }: TextInputProps) => {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="items-center relative w-full rounded"
+          className="relative flex flex-col border rounded-2xl w-full min-h-[6rem] max-h-[9rem] max-sm:max-h-[8rem] overflow-hidden"
         >
           <FormField
             control={form.control}
             name="text"
             render={({ field }) => (
               <FormItem>
-                <FormLabel />
+                <FormLabel className="sr-only">Message</FormLabel>
                 <FormControl>
-                  <div className="relative">
-                    <Textarea
-                      placeholder="Type or speak your message..."
-                      {...field}
-                      className="w-full p-4 pl-10 md:pt-7 pt-6 min-h-[5rem] max-h-[8rem] max-sm:max-h-[8rem] rounded-4xl resize-none overflow-y-auto scrollbar-hidden"
-                    />
-                    {/* Microphone Button */}
-                    <button
-                      type="button"
-                      onClick={startListening}
-                      className="absolute cursor-pointer left-4 top-1/2 -translate-y-1/2 text-primary"
-                    >
-                      {isListening ? (
-                        <FaMicrophoneSlash size={20} />
-                      ) : (
-                        <FaMicrophone size={20} />
-                      )}
-                    </button>
-                  </div>
+                  <Textarea
+                    placeholder="Type or speak your message..."
+                    {...field}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" && !e.shiftKey) {
+                        e.preventDefault();
+                        form.handleSubmit(onSubmit)();
+                      }
+                    }}
+                    className="w-full min-h-[5rem]  max-h-[5rem] max-sm:min-h-[4rem] max-sm:max-h-[4rem] resize-none overflow-y-auto  shadow-none border-none scrollbar-hidden"
+                  />
                 </FormControl>
-                <FormMessage />
               </FormItem>
             )}
           />
-          {/* Send Button */}
-          <Button
-            variant="ghost"
-            className="ml-2 hover:bg-transparent absolute right-4 top-[3rem] -translate-y-1/2 bg-transparent text-primary cursor-pointer"
-            type="submit"
-            disabled={loading || form.formState.isSubmitting}
-            aria-label="Send Message"
-          >
-            {loading ? (
-              <span className="w-5 h-5 border-2 border-primary border-t-transparent rounded-full animate-spin"></span>
-            ) : (
-              <div className="bg-card hover:border-2 duration-100 dark:border-yellow-500 border rounded-full p-2">
-                <IoIosSend className="size-6" />
-              </div>
-            )}
-          </Button>
+
+          <div className="flex justify-between items-center px-2 pb-2 bg-background w-full">
+            {/* Microphone Button */}
+            <Button
+              type="button"
+              onClick={startListening}
+              className="bg-background rounded-full border   size-9 hover:bg-transparent text-primary"
+            >
+              {isListening ? (
+                <FaMicrophoneSlash size={16} />
+              ) : (
+                <FaMicrophone size={16} />
+              )}
+            </Button>
+
+            {/* Send Button */}
+            <Button
+              variant="ghost"
+              type="submit"
+              aria-label="Send Message"
+              disabled={
+                form.formState.isSubmitting || textValue.trim().length === 0
+              }
+              className={`border rounded-full size-9 bg-gray-800 hover:bg-gray-700 dark:bg-gray-500 dark:hover:bg-gray-400 text-primary ${
+                textValue.trim().length === 0
+                  ? "cursor-not-allowed opacity-50"
+                  : "cursor-pointer"
+              }`}
+            >
+              <IoIosSend className="text-white size-6" strokeWidth={"0.5rem"} />
+            </Button>
+          </div>
         </form>
       </Form>
     </div>

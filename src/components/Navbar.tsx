@@ -3,8 +3,8 @@ import logo from "../assets/image/ninjalogo.png";
 import { Link } from "react-router-dom";
 import { SidebarProps } from "@/aiInterface/ChatInterface";
 import { useAppDispatch } from "@/redux/store";
-import { IoCreateOutline } from "react-icons/io5";
 import { createNewChat } from "@/redux/slice/chatSlice";
+import { TbMessageCirclePlus } from "react-icons/tb";
 
 export const Navbar = ({ isSidebarOpen }: SidebarProps) => {
   const dispatch = useAppDispatch();
@@ -27,7 +27,7 @@ export const Navbar = ({ isSidebarOpen }: SidebarProps) => {
             onClick={() => dispatch(createNewChat())}
             className="hidden max-sm:block"
           >
-            <IoCreateOutline size={30} />
+            <TbMessageCirclePlus size={30} strokeWidth={1} />
           </div>
         </div>
 
