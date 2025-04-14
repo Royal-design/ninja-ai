@@ -89,7 +89,7 @@ export const TextInput = ({ scrollToBottom }: TextInputProps) => {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="relative flex flex-col border rounded-2xl w-full min-h-[6rem] max-h-[9rem] max-sm:max-h-[8rem] overflow-hidden"
+          className="relative flex flex-col border rounded-3xl w-full overflow-hidden"
         >
           <FormField
             control={form.control}
@@ -107,7 +107,7 @@ export const TextInput = ({ scrollToBottom }: TextInputProps) => {
                         form.handleSubmit(onSubmit)();
                       }
                     }}
-                    className="w-full min-h-[5rem]  max-h-[5rem] max-sm:min-h-[4rem] max-sm:max-h-[4rem] resize-none overflow-y-auto  shadow-none border-none scrollbar-hidden"
+                    className="w-full min-h-[3rem]  max-h-[5rem] max-sm:min-h-[3rem] max-sm:max-h-[4rem] resize-none overflow-y-auto  shadow-none border-none scrollbar-hidden"
                   />
                 </FormControl>
               </FormItem>
