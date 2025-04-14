@@ -101,13 +101,19 @@ export const TextInput = ({ scrollToBottom }: TextInputProps) => {
                   <Textarea
                     placeholder="Type or speak your message..."
                     {...field}
+                    onChange={(e) => {
+                      const el = e.target;
+                      el.style.height = "auto";
+                      el.style.height = `${Math.min(el.scrollHeight, 100)}px`;
+                      field.onChange(e);
+                    }}
                     onKeyDown={(e) => {
                       if (e.key === "Enter" && !e.shiftKey) {
                         e.preventDefault();
                         form.handleSubmit(onSubmit)();
                       }
                     }}
-                    className="w-full min-h-[3rem]  max-h-[5rem] max-sm:min-h-[3rem] max-sm:max-h-[4rem] resize-none overflow-y-auto  shadow-none border-none scrollbar-hidden"
+                    className="w-full resize-none overflow-y-auto shadow-none border-none scrollbar-hidden"
                   />
                 </FormControl>
               </FormItem>
