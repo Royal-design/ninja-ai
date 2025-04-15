@@ -6,7 +6,7 @@
 
 :root {
   --button-hover: #d9d9d9;
-  --button: #ededed;
+  --button: #d9d7d7;
   --card: #e9e9e9;
   --background: #f7f5f5;
   --foreground: hsl(222.2 84% 4.9%);
@@ -43,8 +43,8 @@
 }
 
 .dark {
-  --button-hover: #00111a;
-  --button: #000e15;
+  --button-hover: #08263b;
+  --button: #061a27;
   --card: #000508;
   --background: #000000;
   --foreground: hsl(210 40% 98%);
