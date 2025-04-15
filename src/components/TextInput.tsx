@@ -103,7 +103,7 @@ export const TextInput = ({ scrollToBottom }: TextInputProps) => {
                     {...field}
                     onChange={(e) => {
                       const el = e.target;
-                      el.style.height = "auto";
+                      el.style.height = "2rem";
                       el.style.height = `${Math.min(el.scrollHeight, 100)}px`;
                       field.onChange(e);
                     }}
@@ -113,7 +113,7 @@ export const TextInput = ({ scrollToBottom }: TextInputProps) => {
                         form.handleSubmit(onSubmit)();
                       }
                     }}
-                    className="w-full resize-none overflow-y-auto shadow-none border-none scrollbar-hidden"
+                    className="w-full resize-none overflow-y-auto shadow-none h-[2rem] min-h-[3rem] border-none scrollbar-hidden"
                   />
                 </FormControl>
               </FormItem>
