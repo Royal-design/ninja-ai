@@ -268,7 +268,7 @@ function SidebarTrigger({
       }}
       {...props}
     >
-      <div className="max-sm:hidden">
+      <div className="max-md:hidden">
         <LuPanelRightClose strokeWidth={1} className="size-8" />
       </div>
       <div className="md:hidden">

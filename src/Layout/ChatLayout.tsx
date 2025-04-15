@@ -24,6 +24,7 @@ import { useMemo, useState } from "react";
 import { ChatInterface } from "@/aiInterface/ChatInterface";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
+import { Navbar } from "@/components/Navbar";
 
 export const ChatLayout = () => {
   const dispatch = useAppDispatch();
@@ -98,9 +99,26 @@ export const ChatLayout = () => {
           </div>
         </SidebarFooter>
       </Sidebar>
-      <SidebarTrigger className="text-primary fixed max-sm:top-4 top-3 left-2 z-10 mr-5 hover:bg-card" />
+
       <main className="w-full relative h-screen overflow-hidden bg-background p-4   max-sm:px-0">
         <div className="bg-background h-full overflow-hidden">
+          <div className="flex items-center justify-between w-full md:hidden">
+            <Navbar isSidebarOpen={open} sidebarTrigger={<SidebarTrigger />} />
+          </div>
+          {open ? (
+            <div className="hidden md:block">
+              <SidebarTrigger className="fixed left-2 z-10 top-4" />
+              <Navbar
+                isSidebarOpen={open}
+                sidebarTrigger={<SidebarTrigger />}
+              />
+            </div>
+          ) : (
+            <div className="hidden md:flex items-center">
+              <SidebarTrigger className="fixed left-2 z-10 top-4" />
+              <Navbar isSidebarOpen={open} />
+            </div>
+          )}
           {activeChatId ? (
             <ChatInterface isSidebarOpen={open} />
           ) : (

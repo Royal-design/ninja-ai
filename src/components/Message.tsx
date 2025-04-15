@@ -141,7 +141,7 @@ export const Message: React.FC<MessageProps> = ({
             <div className="flex items-center gap-2 sm:gap-4 w-full">
               <Button
                 onClick={() => onTranslate(id, text)}
-                className="text-sm text-primary bg-button hover:bg-button-hover transition-colors duration-200 w-full sm:w-auto"
+                className="text-base text-primary bg-button hover:bg-button-hover   transition-colors duration-200 w-full sm:w-auto"
                 disabled={isTranslating}
               >
                 {isTranslating ? "Translating..." : "Translate"}

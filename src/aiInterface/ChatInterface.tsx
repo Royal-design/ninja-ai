@@ -10,7 +10,6 @@ import { motion } from "framer-motion";
 import { useAppDispatch, useAppSelector } from "@/redux/store";
 import { toast } from "sonner";
 import { useEffect, useRef } from "react";
-import { Navbar } from "@/components/Navbar";
 import { Message } from "@/components/Message";
 import { TextInput } from "@/components/TextInput";
 import { googleTranslator } from "@/googleApi/googleTranslator";
@@ -98,10 +97,9 @@ export const ChatInterface = ({ isSidebarOpen }: SidebarProps) => {
 
   return (
     <div className="bg-background flex flex-col max-h-screen  p-4 md:p-8 pb-12">
-      <Navbar isSidebarOpen={isSidebarOpen} />
       <div className=" mt-8 overflow-auto py-30 flex flex-col gap-8 scrollbar-hidden h-screen w-full px-2 md:px-[1rem]">
         {messages.length > 0 ? (
-          <>
+          <div className="">
             {messages.map((msg) => (
               <Message
                 key={msg.id}
@@ -119,7 +117,7 @@ export const ChatInterface = ({ isSidebarOpen }: SidebarProps) => {
               />
             ))}
             <div ref={messagesEndRef} />
-          </>
+          </div>
         ) : (
           <motion.div
             className=""
@@ -150,11 +148,11 @@ export const ChatInterface = ({ isSidebarOpen }: SidebarProps) => {
         )}
       </div>
       <div
-        className={`fixed bottom-0 pb-12 bg-background w-full transition-[left] duration-200 px-6 md:px-0 flex justify-center ${
-          isSidebarOpen ? "md:left-35" : "md:left-0"
+        className={`fixed bottom-0 pb-6 bg-background w-full transition-[left] duration-200 px-6 md:px-0 flex justify-center ${
+          isSidebarOpen ? "md:left-32 lg:left-35" : "md:left-0"
         } left-0`}
       >
-        <div className="w-full max-w-2xl">
+        <div className="w-full md:w-lg lg:w-2xl">
           <TextInput scrollToBottom={scrollToBottom} />
         </div>
       </div>
