@@ -20,4 +20,4 @@ Ninja.Translator is an AI-powered text processing interface that allows users to
 - **Models**: Gemini Models (for translation and summarization)
 - **Storage**: LocalStorage (for chat history persistence)
 
-[click the link to access the site](https://ninja-ai-gpt.vercel.app/)
+[click the link to access the site](https://codeninja-ai.vercel.app/)
