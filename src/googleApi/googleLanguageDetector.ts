@@ -9,43 +9,50 @@ export const googleLanguageDetector = async (text: string) => {
     }
 
     const model = genAI.getGenerativeModel({
-      model: "gemini-1.5-flash-latest"
+      model: "gemini-2.5-pro",
     });
 
-    const prompt = `
-      Detect the language of this text: "${text}". 
-      Reply ONLY in this exact JSON format:
-      {
-        "language": "<Language Name>",
-        "country": "<Country Name>",
-        "code": "<Country Code>"
-      }
-      Do NOT include any extra text or explanation.
-    `;
+    const prompt = `Detect the language of this text: "${text}"
+
+Reply ONLY with valid JSON in this exact format (no markdown, no extra text):
+{"language": "language name", "country": "country name", "code": "ISO country code"}`;
 
     let attempts = 0;
-    let result, response, rawText, detectedData;
+    const maxAttempts = 3;
 
-    while (attempts < 3) {
+    while (attempts < maxAttempts) {
       try {
-        result = await model.generateContent(prompt);
-        response = result.response;
+        attempts++;
+        console.log(`Language detection attempt ${attempts}/${maxAttempts}`);
 
-        if (!response) throw new Error("No response received from AI.");
-        rawText = response.text().trim();
+        const result = await model.generateContent(prompt);
+        const response = result.response;
 
-        // Ensure JSON starts correctly
+        if (!response) {
+          throw new Error("No response received from AI.");
+        }
+
+        let rawText = response.text().trim();
+        console.log("Raw response:", rawText);
+
+        // Remove markdown code blocks if present
+        rawText = rawText.replace(/```json\s*/g, "").replace(/```\s*/g, "");
+
+        // Find JSON object boundaries
         const jsonStart = rawText.indexOf("{");
         const jsonEnd = rawText.lastIndexOf("}");
+
         if (jsonStart === -1 || jsonEnd === -1) {
           throw new Error("Invalid JSON response from AI.");
         }
 
         const jsonString = rawText.substring(jsonStart, jsonEnd + 1);
+        console.log("Extracted JSON:", jsonString);
 
         // Parse JSON response
-        detectedData = JSON.parse(jsonString);
+        const detectedData = JSON.parse(jsonString);
 
+        // Validate required fields
         if (
           !detectedData.language ||
           !detectedData.country ||
@@ -54,15 +61,25 @@ export const googleLanguageDetector = async (text: string) => {
           throw new Error("Incomplete response.");
         }
 
+        // Success - return the data
         return {
-          language: detectedData.language,
-          country: detectedData.country,
-          code: detectedData.code.toLowerCase()
+          language: detectedData.language.trim(),
+          country: detectedData.country.trim(),
+          code: detectedData.code.toLowerCase().trim(),
         };
-      } catch (error) {
-        attempts++;
-        console.warn(`Retrying (${attempts}/3)...`);
-        await new Promise((resolve) => setTimeout(resolve, 2000)); // Wait 2 seconds before retrying
+      } catch (parseError: any) {
+        console.warn(
+          `Attempt ${attempts}/${maxAttempts} failed:`,
+          parseError.message
+        );
+
+        // If this was the last attempt, throw the error
+        if (attempts >= maxAttempts) {
+          throw parseError;
+        }
+
+        // Wait before retrying (exponential backoff: 1s, 2s, 3s)
+        await new Promise((resolve) => setTimeout(resolve, 1000 * attempts));
       }
     }
 
@@ -70,12 +87,35 @@ export const googleLanguageDetector = async (text: string) => {
   } catch (error: any) {
     console.error("Language detection error:", error);
 
-    if (error.message.includes("503")) {
+    // Handle specific API errors
+    const errorMessage = error?.message || "";
+    const errorString = String(error);
+
+    if (errorMessage.includes("SAFETY") || errorString.includes("SAFETY")) {
+      toast.error("Content blocked due to safety filters. Try different text.");
+    } else if (errorMessage.includes("503") || errorString.includes("503")) {
       toast.error("AI servers are overloaded. Try again later.");
-    } else if (error.message.includes("429")) {
+    } else if (errorMessage.includes("429") || errorString.includes("429")) {
       toast.error("Rate limit reached. Wait before trying again.");
-    } else if (error.message.includes("network")) {
+    } else if (
+      errorMessage.includes("API key") ||
+      errorString.includes("API key")
+    ) {
+      toast.error("API configuration error. Please check your setup.");
+    } else if (
+      errorMessage.includes("network") ||
+      errorString.includes("network")
+    ) {
       toast.error("Network error. Check your connection.");
+    } else if (
+      errorMessage.includes("JSON") ||
+      errorMessage.includes("parse")
+    ) {
+      toast.error("Error processing response. Please try again.");
+    } else if (errorMessage.includes("Failed after")) {
+      toast.error(
+        "Language detection failed after multiple attempts. Please try again."
+      );
     } else {
       toast.error("Failed to detect language. Please try again.");
     }

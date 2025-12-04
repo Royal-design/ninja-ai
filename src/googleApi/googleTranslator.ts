@@ -14,7 +14,7 @@ export const googleTranslator = async (text: string, targetLang: string) => {
     }
 
     const model = genAI.getGenerativeModel({
-      model: "gemini-1.5-flash-latest"
+      model: "gemini-2.5-pro",
     });
 
     const prompt = `
@@ -62,7 +62,7 @@ export const googleTranslator = async (text: string, targetLang: string) => {
         return {
           translatedText: translatedData.translatedText,
           country: translatedData.country,
-          code: translatedData.code.toLowerCase() // Ensure lowercase for consistency
+          code: translatedData.code.toLowerCase(), // Ensure lowercase for consistency
         };
       } catch (error) {
         attempts++;
