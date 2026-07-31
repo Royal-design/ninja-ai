@@ -1,5 +1,5 @@
 import { toast } from "sonner";
-import { genAI } from "./api";
+import { DEFAULT_MODEL, genAI } from "./api";
 
 export const googleSummarizer = async (text: string) => {
   try {
@@ -16,7 +16,7 @@ export const googleSummarizer = async (text: string) => {
     }
 
     const model = genAI.getGenerativeModel({
-      model: "gemini-2.5-pro",
+      model: DEFAULT_MODEL,
     });
 
     const prompt = `
@@ -59,7 +59,7 @@ export const googleSummarizer = async (text: string) => {
         }
 
         return summaryData.summary;
-      } catch (error) {
+      } catch {
         attempts++;
         console.warn(`Retrying (${attempts}/3)...`);
         await new Promise((resolve) => setTimeout(resolve, 2000));
@@ -67,24 +67,23 @@ export const googleSummarizer = async (text: string) => {
     }
 
     throw new Error("Failed after 3 attempts.");
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Summarization error:", error);
 
+    const err = error as { message?: string };
+
     // Handle specific API errors
-    if (error.message.includes("Failed to parse")) {
+    if (err.message?.includes("Failed to parse")) {
       toast.error("Error parsing summary response. Try again.");
-    } else if (error.message.includes("No response received")) {
+    } else if (err.message?.includes("No response received")) {
       toast.error("No response from AI. Try again later.");
-    } else if (error.message.includes("503")) {
+    } else if (err.message?.includes("503")) {
       toast.error("Service is overloaded. Please wait and try again.");
-    } else if (error.message.includes("429")) {
+    } else if (err.message?.includes("429")) {
       toast.error("API rate limit reached. Please wait before trying again.");
-    } else if (error.message.includes("network")) {
+    } else if (err.message?.includes("network")) {
       toast.error("Network error. Check your connection and try again.");
-    } else if (
-      error instanceof Error &&
-      error.message.includes("Candidate was blocked due to SAFETY")
-    ) {
+    } else if (err.message?.includes("Candidate was blocked due to SAFETY")) {
       toast.error(
         "Summarization blocked due to safety filters. Try rephrasing."
       );

@@ -1,13 +1,12 @@
 import * as React from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { VariantProps, cva } from "class-variance-authority";
-import { LuPanelRightClose } from "react-icons/lu";
+import { Menu, PanelLeftClose, PanelLeftOpen } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
-import { HiOutlineMenuAlt2 } from "react-icons/hi";
 import {
   Sheet,
   SheetContent,
@@ -253,7 +252,7 @@ function SidebarTrigger({
   onClick,
   ...props
 }: React.ComponentProps<typeof Button>) {
-  const { toggleSidebar } = useSidebar();
+  const { toggleSidebar, state } = useSidebar();
 
   return (
     <Button
@@ -261,7 +260,10 @@ function SidebarTrigger({
       data-slot="sidebar-trigger"
       variant="ghost"
       size="icon"
-      className={cn("h-7 shrink w-7", className)}
+      className={cn(
+        "size-9 rounded-full text-muted-foreground transition-colors hover:bg-accent hover:text-foreground",
+        className
+      )}
       onClick={(event) => {
         onClick?.(event);
         toggleSidebar();
@@ -269,10 +271,14 @@ function SidebarTrigger({
       {...props}
     >
       <div className="max-md:hidden">
-        <LuPanelRightClose strokeWidth={1} className="size-8" />
+        {state === "collapsed" ? (
+          <PanelLeftOpen className="size-5" />
+        ) : (
+          <PanelLeftClose className="size-5" />
+        )}
       </div>
       <div className="md:hidden">
-        <HiOutlineMenuAlt2 strokeWidth={1} className="size-8" />
+        <Menu className="size-5" />
       </div>
 
       <span className="sr-only">Toggle Sidebar</span>

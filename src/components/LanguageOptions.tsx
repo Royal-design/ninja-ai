@@ -1,3 +1,4 @@
+import { ArrowLeftRight } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "@/redux/store";
 import {
   Select,
@@ -7,10 +8,9 @@ import {
   SelectValue
 } from "./ui/select";
 import { setSelectedLang } from "@/redux/slice/chatSlice";
-import { HiOutlineLanguage } from "react-icons/hi2";
 import { languages } from "@/assets/data/Languages";
 
-export const LanguageOptions = () => {
+export const LanguageOptions = ({ compact = false }: { compact?: boolean }) => {
   const dispatch = useAppDispatch();
   const { selectedLang, detectedName, detectedCode } = useAppSelector(
     (state) => state.chat
@@ -27,48 +27,49 @@ export const LanguageOptions = () => {
     : "/default-flag.png";
 
   return (
-    <div className="flex items-center justify-center gap-4">
-      <div className="flex items-center border rounded-md p-1 px-2 gap-2">
-        <img
-          src={flagUrl}
-          alt="Detected Flag"
-          className="w-6 h-6 rounded-full"
-        />
-        <span className="text-sm font-semibold">
-          {detectedName || "Unknown"}
-        </span>
-      </div>
+    <div className="flex items-center gap-1.5">
+      {!compact && (
+        <div className="flex items-center gap-2 rounded-full border bg-card py-1 pl-2 pr-3">
+          <img
+            src={flagUrl}
+            alt="Detected language"
+            className="size-5 rounded-full object-cover"
+          />
+          <span className="text-xs font-medium">{detectedName || "Auto"}</span>
+        </div>
+      )}
 
-      {/* Language Swap Button */}
-      <button onClick={handleSwapLanguages} className="text-2xl">
-        <HiOutlineLanguage />
+      <button
+        onClick={handleSwapLanguages}
+        aria-label="Swap source and target language"
+        className="flex size-8 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+      >
+        <ArrowLeftRight className="size-4" />
       </button>
 
-      {/* Language Selection Dropdown */}
-      <div className="flex items-center gap-2">
-        <Select
-          value={selectedLang}
-          onValueChange={(value) => dispatch(setSelectedLang(value))}
+      <Select
+        value={selectedLang}
+        onValueChange={(value) => dispatch(setSelectedLang(value))}
+      >
+        <SelectTrigger
+          aria-label="Target language"
+          className="h-9 min-w-0 gap-2 rounded-full border bg-card px-3 text-xs font-medium [&>span]:flex [&>span]:items-center [&>span]:gap-1.5"
         >
-          <SelectTrigger className="w-40 border rounded-lg p-2">
-            <SelectValue placeholder="Select Language" />
-          </SelectTrigger>
-          <SelectContent>
-            {languages.map((lang) => (
-              <SelectItem key={lang.code} value={lang.code}>
-                <div className="flex items-center gap-2">
-                  <img
-                    src={lang.flag}
-                    alt={lang.name}
-                    className="w-6 h-6 rounded-full"
-                  />
-                  {lang.name}
-                </div>
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
+          <SelectValue placeholder="Target" />
+        </SelectTrigger>
+        <SelectContent>
+          {languages.map((lang) => (
+            <SelectItem key={lang.code} value={lang.code}>
+              <img
+                src={lang.flag}
+                alt={lang.name}
+                className="size-5 rounded-full object-cover"
+              />
+              {lang.name}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
     </div>
   );
 };

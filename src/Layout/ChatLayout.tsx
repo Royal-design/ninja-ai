@@ -1,35 +1,38 @@
-import { Theme } from "@/components/Theme";
+import { useMemo, useState } from "react";
+import { motion } from "framer-motion";
+import { MessageCircle, Plus, Trash2 } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
+  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
+  SidebarMenuAction,
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarProvider,
   SidebarTrigger
 } from "@/components/ui/sidebar";
-import { Trash2 } from "lucide-react";
-import { TbMessageCirclePlus } from "react-icons/tb";
+import { Button } from "@/components/ui/button";
+import { Navbar } from "@/components/Navbar";
+import { ChatInterface } from "@/aiInterface/ChatInterface";
 import { useAppDispatch, useAppSelector } from "@/redux/store";
 import {
   createNewChat,
   setActiveChat,
   deleteChat
 } from "@/redux/slice/chatSlice";
-import { useMemo, useState } from "react";
-import { ChatInterface } from "@/aiInterface/ChatInterface";
-import { Button } from "@/components/ui/button";
-import { motion } from "framer-motion";
-import { Navbar } from "@/components/Navbar";
+import { cn } from "@/lib/utils";
+import logo from "../assets/image/ninjalogo.png";
 
 export const ChatLayout = () => {
   const dispatch = useAppDispatch();
   const { chats, activeChatId } = useAppSelector((state) => state.chat);
   const [open, setOpen] = useState<boolean>(true);
+
   const sortedChats = useMemo(() => {
     return [...chats].sort((a, b) => {
       const lastMessageA =
@@ -43,112 +46,110 @@ export const ChatLayout = () => {
       return lastMessageB - lastMessageA;
     });
   }, [chats]);
+
   return (
     <SidebarProvider open={open} onOpenChange={setOpen}>
-      <Sidebar collapsible="offcanvas" className="max-w-md">
-        <SidebarHeader className="bg-card border-b dark:border-slate-800  md:hidden">
-          <h2 className="text-lg font-semibold text-center">Chat Menu</h2>
-        </SidebarHeader>
-        <SidebarHeader
-          onClick={() => dispatch(createNewChat())}
-          className="bg-card border-b dark:border-slate-800"
-        >
-          <div className="flex justify-end">
-            <TbMessageCirclePlus size={30} strokeWidth={1} />
+      <Sidebar collapsible="offcanvas">
+        <SidebarHeader className="flex h-16 shrink-0 flex-row items-center justify-between border-b px-4">
+          <div className="flex items-center gap-2">
+            <img src={logo} alt="" className="size-8 object-contain" />
+            <span className="font-display text-lg font-bold tracking-tight">
+              Ninja.AI
+            </span>
           </div>
         </SidebarHeader>
 
-        <SidebarContent className="bg-background text-primary">
-          <SidebarGroup>
-            <SidebarGroupContent>
-              <SidebarMenu className="flex flex-col gap-2">
-                {sortedChats.slice().map((chat) => (
-                  <SidebarMenuItem
-                    key={chat.id}
-                    className="flex items-center justify-between"
-                  >
-                    <SidebarMenuButton
-                      onClick={() => dispatch(setActiveChat(chat.id))}
-                      className={`flex-grow flex items-center gap-2 p-2 rounded transition-color ${
-                        activeChatId === chat.id
-                          ? "bg-button hover:bg-button-hover"
-                          : ""
-                      }`}
-                    >
-                      <span>Chat - {chat.messages[0]?.text || "New Chat"}</span>
-                    </SidebarMenuButton>
+        <div className="px-3 pt-3">
+          <Button
+            onClick={() => dispatch(createNewChat())}
+            className="w-full rounded-xl bg-primary text-primary-foreground shadow-sm hover:bg-primary/90"
+          >
+            <Plus className="size-4" />
+            New chat
+          </Button>
+        </div>
 
-                    <button
-                      onClick={() => dispatch(deleteChat(chat.id))}
-                      className="p-1 hover:bg-red-100 rounded"
-                    >
-                      <Trash2 size={16} className="text-red-500" />
-                    </button>
-                  </SidebarMenuItem>
-                ))}
+        <SidebarContent>
+          <SidebarGroup>
+            <SidebarGroupLabel>Recent chats</SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu className="gap-1">
+                {sortedChats.map((chat) => {
+                  const isActive = activeChatId === chat.id;
+                  return (
+                    <SidebarMenuItem key={chat.id}>
+                      <SidebarMenuButton
+                        isActive={isActive}
+                        onClick={() => dispatch(setActiveChat(chat.id))}
+                        className="gap-2.5"
+                      >
+                        <MessageCircle
+                          className={cn(
+                            "size-4 shrink-0",
+                            isActive ? "text-brand" : "text-muted-foreground"
+                          )}
+                        />
+                        <span className="truncate">
+                          {chat.messages[0]?.text || "New chat"}
+                        </span>
+                      </SidebarMenuButton>
+                      <SidebarMenuAction
+                        showOnHover
+                        aria-label="Delete chat"
+                        onClick={() => dispatch(deleteChat(chat.id))}
+                        className="text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
+                      >
+                        <Trash2 className="size-4" />
+                      </SidebarMenuAction>
+                    </SidebarMenuItem>
+                  );
+                })}
               </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>
         </SidebarContent>
 
-        <SidebarFooter className="w-full text-primary bg-card border-t dark:border-slate-800 text-sm">
-          <div className="flex justify-between items-center">
-            <p>© {new Date().getFullYear()} Emmanuel Chat App</p>
-
-            <Theme />
-          </div>
+        <SidebarFooter className="border-t px-4 py-3">
+          <p className="font-mono text-[10px] uppercase tracking-wide text-muted-foreground">
+            Ninja.AI · Language toolkit
+          </p>
         </SidebarFooter>
       </Sidebar>
 
-      <main className="w-full relative h-screen overflow-hidden bg-background p-4   max-sm:px-0">
-        <div className="bg-background h-full overflow-hidden">
-          <div className="flex items-center justify-between w-full md:hidden">
-            <Navbar isSidebarOpen={open} sidebarTrigger={<SidebarTrigger />} />
-          </div>
-          {open ? (
-            <div className="hidden md:block">
-              <SidebarTrigger className="fixed left-2 z-10 top-4" />
-              <Navbar
-                isSidebarOpen={open}
-                sidebarTrigger={<SidebarTrigger />}
-              />
-            </div>
-          ) : (
-            <div className="hidden md:flex items-center">
-              <SidebarTrigger className="fixed left-2 z-10 top-4" />
-              <Navbar isSidebarOpen={open} />
-            </div>
-          )}
-          {activeChatId ? (
-            <ChatInterface isSidebarOpen={open} />
-          ) : (
-            <motion.div
-              className="mt-2 flex flex-col justify-center h-full"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5, duration: 0.8 }}
-            >
-              <p className="text-center text-3xl md:text-4xl text-slate-600 dark:text-slate-300  mt-10">
-                What can I help you with?
-              </p>
-              <p className="text-sm text-slate-600 dark:text-slate-300 px-8 mt-3 text-center">
-                Summarization is available only for texts with a minimum of 150
-                words
-              </p>
+      <main
+        className={cn(
+          "relative flex h-dvh min-w-0 flex-1 flex-col overflow-hidden bg-background"
+        )}
+      >
+        <Navbar
+          isSidebarOpen={open}
+          sidebarTrigger={<SidebarTrigger className="ml-1" />}
+        />
 
-              <div className=" justify-center  mt-4 flex flex-wrap  gap-2">
-                <div
-                  onClick={() => dispatch(createNewChat())}
-                  className="cursor-pointer"
-                >
-                  <Button className="rounded-2xl cursor-pointer border bg-button hover:bg-button-hover transition-colors duration-100 text-slate-600 dark:text-slate-300">
-                    Create New Chat
-                  </Button>
-                </div>
-              </div>
-            </motion.div>
-          )}
-        </div>
+        {activeChatId ? (
+          <ChatInterface />
+        ) : (
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.35 }}
+            className="flex flex-1 flex-col items-center justify-center gap-3 px-6 text-center"
+          >
+            <p className="font-display text-2xl font-bold tracking-tight md:text-3xl">
+              What can I help you with?
+            </p>
+            <p className="max-w-md text-sm text-muted-foreground">
+              Start a new conversation to translate, detect, or summarize text.
+            </p>
+            <Button
+              onClick={() => dispatch(createNewChat())}
+              className="mt-2 rounded-xl"
+            >
+              <Plus className="size-4" />
+              New chat
+            </Button>
+          </motion.div>
+        )}
       </main>
     </SidebarProvider>
   );

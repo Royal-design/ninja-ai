@@ -13,7 +13,7 @@ export const getCountryName = (code: string): string => {
         code.toUpperCase()
       ) || code
     );
-  } catch (error) {
+  } catch {
     return code;
   }
 };

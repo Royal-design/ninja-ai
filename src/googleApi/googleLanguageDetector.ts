@@ -1,5 +1,5 @@
 import { toast } from "sonner";
-import { genAI } from "./api";
+import { DEFAULT_MODEL, genAI } from "./api";
 
 export const googleLanguageDetector = async (text: string) => {
   try {
@@ -9,7 +9,7 @@ export const googleLanguageDetector = async (text: string) => {
     }
 
     const model = genAI.getGenerativeModel({
-      model: "gemini-2.5-pro",
+      model: DEFAULT_MODEL,
     });
 
     const prompt = `Detect the language of this text: "${text}"
@@ -67,10 +67,10 @@ Reply ONLY with valid JSON in this exact format (no markdown, no extra text):
           country: detectedData.country.trim(),
           code: detectedData.code.toLowerCase().trim(),
         };
-      } catch (parseError: any) {
+      } catch (parseError: unknown) {
         console.warn(
           `Attempt ${attempts}/${maxAttempts} failed:`,
-          parseError.message
+          parseError instanceof Error ? parseError.message : String(parseError)
         );
 
         // If this was the last attempt, throw the error
@@ -84,11 +84,12 @@ Reply ONLY with valid JSON in this exact format (no markdown, no extra text):
     }
 
     throw new Error("Failed after 3 attempts.");
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Language detection error:", error);
 
     // Handle specific API errors
-    const errorMessage = error?.message || "";
+    const err = error as { message?: string };
+    const errorMessage = err?.message || "";
     const errorString = String(error);
 
     if (errorMessage.includes("SAFETY") || errorString.includes("SAFETY")) {

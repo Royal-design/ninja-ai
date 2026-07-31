@@ -126,15 +126,15 @@ export const chatSlice = createSlice({
       chat.messages.push({
         id: generateMessageId(chat.messages),
         text: action.payload.text,
-        lang: action.payload.lang,
-        code: action.payload.code,
-        name: action.payload.name,
+        lang: action.payload.lang || "Unknown",
+        code: action.payload.code || "",
+        name: action.payload.name || "",
         type: "user",
         timestamp: new Date().toISOString()
       });
 
-      state.detectedCode = action.payload.code;
-      state.detectedName = action.payload.lang;
+      state.detectedCode = action.payload.code || "us";
+      state.detectedName = action.payload.lang || "Unknown";
       saveChatsToStorage(state.chats, state.activeChatId);
     },
 
